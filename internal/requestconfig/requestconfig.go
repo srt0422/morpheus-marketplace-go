@@ -17,10 +17,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal"
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apierror"
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apiform"
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apiquery"
+	"github.com/srt0422/morpheus-marketplace-go/internal"
+	"github.com/srt0422/morpheus-marketplace-go/internal/apierror"
+	"github.com/srt0422/morpheus-marketplace-go/internal/apiform"
+	"github.com/srt0422/morpheus-marketplace-go/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {
