@@ -3,7 +3,7 @@
 package shared
 
 import (
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apijson"
+	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 )
 
 type Bid []BidItem

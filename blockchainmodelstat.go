@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apijson"
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
+	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
 // BlockchainModelStatService contains methods and other services that help with

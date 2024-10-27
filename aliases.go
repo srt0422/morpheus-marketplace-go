@@ -3,8 +3,8 @@
 package morpheusmarketplace
 
 import (
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apierror"
-	"github.com/stainless-sdks/morpheus-marketplace-go/shared"
+	"github.com/srt0422/morpheus-marketplace-go/internal/apierror"
+	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 type Error = apierror.Error
