@@ -1,4 +1,4 @@
-module github.com/stainless-sdks/morpheus-marketplace-go
+module github.com/srt0422/morpheus-marketplace-go
 
 go 1.21
 

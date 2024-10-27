@@ -3,7 +3,7 @@
 package morpheusmarketplace
 
 import (
-	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
 // BlockchainService contains methods and other services that help with interacting

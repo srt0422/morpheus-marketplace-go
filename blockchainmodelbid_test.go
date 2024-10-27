@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go"
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/testutil"
-	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go"
+	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
+	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
 func TestBlockchainModelBidListWithOptionalParams(t *testing.T) {
