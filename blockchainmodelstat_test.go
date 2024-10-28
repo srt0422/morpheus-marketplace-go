@@ -13,7 +13,7 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
-func TestBlockchainModelStatGet(t *testing.T) {
+func TestBlockchainModelStatList(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -24,7 +24,7 @@ func TestBlockchainModelStatGet(t *testing.T) {
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
 	)
-	_, err := client.Blockchain.Models.Stats.Get(context.TODO(), "id")
+	_, err := client.Blockchain.Models.Stats.List(context.TODO(), "id")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

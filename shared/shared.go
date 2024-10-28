@@ -6,50 +6,71 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 )
 
-type Bid []BidItem
-
-type BidItem struct {
-	BidID          string      `json:"bidID"`
-	ModelID        string      `json:"modelID"`
-	PricePerSecond string      `json:"pricePerSecond" format:"biginteger"`
-	ProviderID     string      `json:"providerID"`
-	Status         string      `json:"status"`
-	JSON           bidItemJSON `json:"-"`
+type Bid struct {
+	// Unique identifier of the bid
+	ID string `json:"id,required"`
+	// ID of the model the bid is for
+	ModelID string `json:"modelID,required"`
+	// Bid price per second
+	PricePerSecond string  `json:"pricePerSecond,required"`
+	JSON           bidJSON `json:"-"`
 }
 
-// bidItemJSON contains the JSON metadata for the struct [BidItem]
-type bidItemJSON struct {
-	BidID          apijson.Field
+// bidJSON contains the JSON metadata for the struct [Bid]
+type bidJSON struct {
+	ID             apijson.Field
 	ModelID        apijson.Field
 	PricePerSecond apijson.Field
-	ProviderID     apijson.Field
-	Status         apijson.Field
 	raw            string
 	ExtraFields    map[string]apijson.Field
 }
 
-func (r *BidItem) UnmarshalJSON(data []byte) (err error) {
+func (r *Bid) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r bidItemJSON) RawJSON() string {
+func (r bidJSON) RawJSON() string {
+	return r.raw
+}
+
+type Budget struct {
+	// Current session budget
+	Budget string     `json:"budget,required"`
+	JSON   budgetJSON `json:"-"`
+}
+
+// budgetJSON contains the JSON metadata for the struct [Budget]
+type budgetJSON struct {
+	Budget      apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Budget) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r budgetJSON) RawJSON() string {
 	return r.raw
 }
 
 type Session struct {
-	// Additional session details.
-	Details interface{} `json:"details"`
-	// Unique identifier for the session.
-	SessionID string      `json:"sessionID"`
-	JSON      sessionJSON `json:"-"`
+	// Unique identifier of the session
+	ID string `json:"id,required"`
+	// Duration of the session in seconds
+	SessionDuration string `json:"sessionDuration,required"`
+	// Status of the session
+	Status string      `json:"status,required"`
+	JSON   sessionJSON `json:"-"`
 }
 
 // sessionJSON contains the JSON metadata for the struct [Session]
 type sessionJSON struct {
-	Details     apijson.Field
-	SessionID   apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
+	ID              apijson.Field
+	SessionDuration apijson.Field
+	Status          apijson.Field
+	raw             string
+	ExtraFields     map[string]apijson.Field
 }
 
 func (r *Session) UnmarshalJSON(data []byte) (err error) {
@@ -57,5 +78,26 @@ func (r *Session) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r sessionJSON) RawJSON() string {
+	return r.raw
+}
+
+type SessionList struct {
+	// List of sessions
+	Sessions []Session       `json:"sessions,required"`
+	JSON     sessionListJSON `json:"-"`
+}
+
+// sessionListJSON contains the JSON metadata for the struct [SessionList]
+type sessionListJSON struct {
+	Sessions    apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *SessionList) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r sessionListJSON) RawJSON() string {
 	return r.raw
 }

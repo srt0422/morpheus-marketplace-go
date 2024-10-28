@@ -30,7 +30,7 @@ func NewBlockchainTokenSupplyService(opts ...option.RequestOption) (r *Blockchai
 	return
 }
 
-// Fetches the total supply of MOR tokens.
+// Get token supply
 func (r *BlockchainTokenSupplyService) Get(ctx context.Context, opts ...option.RequestOption) (res *TokenSupply, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/token/supply"
@@ -39,8 +39,8 @@ func (r *BlockchainTokenSupplyService) Get(ctx context.Context, opts ...option.R
 }
 
 type TokenSupply struct {
-	// Total supply of MOR tokens.
-	Supply string          `json:"supply" format:"biginteger"`
+	// Total supply of the token
+	Supply string          `json:"supply,required"`
 	JSON   tokenSupplyJSON `json:"-"`
 }
 

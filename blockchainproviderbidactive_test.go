@@ -24,7 +24,7 @@ func TestBlockchainProviderBidActiveList(t *testing.T) {
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
 	)
-	_, err := client.Blockchain.Providers.Bids.Active.List(context.TODO(), "id")
+	_, err := client.Blockchain.Providers.Bids.Active.List(context.TODO(), "0x1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

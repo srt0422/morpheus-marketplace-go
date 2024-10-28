@@ -36,8 +36,8 @@ func NewBlockchainModelBidService(opts ...option.RequestOption) (r *BlockchainMo
 	return
 }
 
-// Retrieves a list of bids associated with a specific model.
-func (r *BlockchainModelBidService) List(ctx context.Context, id string, query BlockchainModelBidListParams, opts ...option.RequestOption) (res *shared.Bid, err error) {
+// List bids for a model
+func (r *BlockchainModelBidService) List(ctx context.Context, id string, query BlockchainModelBidListParams, opts ...option.RequestOption) (res *BlockchainModelBidListResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -48,8 +48,8 @@ func (r *BlockchainModelBidService) List(ctx context.Context, id string, query B
 	return
 }
 
-// Fetches active bids associated with a specific model.
-func (r *BlockchainModelBidService) Active(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.Bid, err error) {
+// List active bids for a model
+func (r *BlockchainModelBidService) Active(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainModelBidActiveResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -60,8 +60,8 @@ func (r *BlockchainModelBidService) Active(ctx context.Context, id string, opts 
 	return
 }
 
-// Retrieves rated bids for a specified model.
-func (r *BlockchainModelBidService) Rated(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.Bid, err error) {
+// List rated bids for a model
+func (r *BlockchainModelBidService) Rated(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainModelBidRatedResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -73,24 +73,17 @@ func (r *BlockchainModelBidService) Rated(ctx context.Context, id string, opts .
 }
 
 type BlockchainModelBidListResponse struct {
-	BidID          string                             `json:"bidID"`
-	ModelID        string                             `json:"modelID"`
-	PricePerSecond string                             `json:"pricePerSecond" format:"biginteger"`
-	ProviderID     string                             `json:"providerID"`
-	Status         string                             `json:"status"`
-	JSON           blockchainModelBidListResponseJSON `json:"-"`
+	// List of bids
+	Bids []shared.Bid                       `json:"bids,required"`
+	JSON blockchainModelBidListResponseJSON `json:"-"`
 }
 
 // blockchainModelBidListResponseJSON contains the JSON metadata for the struct
 // [BlockchainModelBidListResponse]
 type blockchainModelBidListResponseJSON struct {
-	BidID          apijson.Field
-	ModelID        apijson.Field
-	PricePerSecond apijson.Field
-	ProviderID     apijson.Field
-	Status         apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
+	Bids        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
 func (r *BlockchainModelBidListResponse) UnmarshalJSON(data []byte) (err error) {
@@ -102,24 +95,17 @@ func (r blockchainModelBidListResponseJSON) RawJSON() string {
 }
 
 type BlockchainModelBidActiveResponse struct {
-	BidID          string                               `json:"bidID"`
-	ModelID        string                               `json:"modelID"`
-	PricePerSecond string                               `json:"pricePerSecond" format:"biginteger"`
-	ProviderID     string                               `json:"providerID"`
-	Status         string                               `json:"status"`
-	JSON           blockchainModelBidActiveResponseJSON `json:"-"`
+	// List of bids
+	Bids []shared.Bid                         `json:"bids,required"`
+	JSON blockchainModelBidActiveResponseJSON `json:"-"`
 }
 
 // blockchainModelBidActiveResponseJSON contains the JSON metadata for the struct
 // [BlockchainModelBidActiveResponse]
 type blockchainModelBidActiveResponseJSON struct {
-	BidID          apijson.Field
-	ModelID        apijson.Field
-	PricePerSecond apijson.Field
-	ProviderID     apijson.Field
-	Status         apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
+	Bids        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
 func (r *BlockchainModelBidActiveResponse) UnmarshalJSON(data []byte) (err error) {
@@ -131,24 +117,17 @@ func (r blockchainModelBidActiveResponseJSON) RawJSON() string {
 }
 
 type BlockchainModelBidRatedResponse struct {
-	BidID          string                              `json:"bidID"`
-	ModelID        string                              `json:"modelID"`
-	PricePerSecond string                              `json:"pricePerSecond" format:"biginteger"`
-	ProviderID     string                              `json:"providerID"`
-	Status         string                              `json:"status"`
-	JSON           blockchainModelBidRatedResponseJSON `json:"-"`
+	// List of bids
+	Bids []shared.Bid                        `json:"bids,required"`
+	JSON blockchainModelBidRatedResponseJSON `json:"-"`
 }
 
 // blockchainModelBidRatedResponseJSON contains the JSON metadata for the struct
 // [BlockchainModelBidRatedResponse]
 type blockchainModelBidRatedResponseJSON struct {
-	BidID          apijson.Field
-	ModelID        apijson.Field
-	PricePerSecond apijson.Field
-	ProviderID     apijson.Field
-	Status         apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
+	Bids        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
 func (r *BlockchainModelBidRatedResponse) UnmarshalJSON(data []byte) (err error) {
@@ -160,10 +139,10 @@ func (r blockchainModelBidRatedResponseJSON) RawJSON() string {
 }
 
 type BlockchainModelBidListParams struct {
-	// Limit for pagination.
+	// Maximum number of results to return
 	Limit param.Field[int64] `query:"limit"`
-	// Offset for pagination.
-	Offset param.Field[string] `query:"offset" format:"biginteger"`
+	// Number of results to skip
+	Offset param.Field[int64] `query:"offset"`
 }
 
 // URLQuery serializes [BlockchainModelBidListParams]'s query parameters as

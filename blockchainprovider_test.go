@@ -25,8 +25,8 @@ func TestBlockchainProviderNew(t *testing.T) {
 		option.WithBaseURL(baseURL),
 	)
 	_, err := client.Blockchain.Providers.New(context.TODO(), morpheusmarketplace.BlockchainProviderNewParams{
-		Endpoint: morpheusmarketplace.F("endpoint"),
-		Stake:    morpheusmarketplace.F("stake"),
+		Endpoint: morpheusmarketplace.F("https://provider.example.com"),
+		Stake:    morpheusmarketplace.F("2000"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
@@ -69,7 +69,7 @@ func TestBlockchainProviderDelete(t *testing.T) {
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
 	)
-	_, err := client.Blockchain.Providers.Delete(context.TODO(), "id")
+	err := client.Blockchain.Providers.Delete(context.TODO(), "0x1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

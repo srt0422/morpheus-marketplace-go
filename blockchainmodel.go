@@ -22,10 +22,9 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewBlockchainModelService] method instead.
 type BlockchainModelService struct {
-	Options  []option.RequestOption
-	Bids     *BlockchainModelBidService
-	Minstake *BlockchainModelMinstakeService
-	Stats    *BlockchainModelStatService
+	Options []option.RequestOption
+	Bids    *BlockchainModelBidService
+	Stats   *BlockchainModelStatService
 }
 
 // NewBlockchainModelService generates a new service that applies the given options
@@ -35,12 +34,11 @@ func NewBlockchainModelService(opts ...option.RequestOption) (r *BlockchainModel
 	r = &BlockchainModelService{}
 	r.Options = opts
 	r.Bids = NewBlockchainModelBidService(opts...)
-	r.Minstake = NewBlockchainModelMinstakeService(opts...)
 	r.Stats = NewBlockchainModelStatService(opts...)
 	return
 }
 
-// Registers a new model on the blockchain.
+// Create a new model
 func (r *BlockchainModelService) New(ctx context.Context, body BlockchainModelNewParams, opts ...option.RequestOption) (res *Model, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/models"
@@ -48,52 +46,28 @@ func (r *BlockchainModelService) New(ctx context.Context, body BlockchainModelNe
 	return
 }
 
-// Fetches a list of all models available on the blockchain.
-func (r *BlockchainModelService) List(ctx context.Context, opts ...option.RequestOption) (res *[]BlockchainModelListResponse, err error) {
+// List all available models
+func (r *BlockchainModelService) List(ctx context.Context, opts ...option.RequestOption) (res *[]Model, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/models"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
-// Removes a model from the blockchain by its ID.
-func (r *BlockchainModelService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainModelDeleteResponse, err error) {
+// Delete a model
+func (r *BlockchainModelService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = append(r.Options[:], opts...)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
 	}
 	path := fmt.Sprintf("blockchain/models/%s", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return
 }
 
-// Checks if a model exists on the blockchain.
-func (r *BlockchainModelService) Exists(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainModelExistsResponse, err error) {
-	opts = append(r.Options[:], opts...)
-	if id == "" {
-		err = errors.New("missing required id parameter")
-		return
-	}
-	path := fmt.Sprintf("blockchain/models/%s/exists", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
-	return
-}
-
-// Resets the statistics of a model.
-func (r *BlockchainModelService) Resetstats(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainModelResetstatsResponse, err error) {
-	opts = append(r.Options[:], opts...)
-	if id == "" {
-		err = errors.New("missing required id parameter")
-		return
-	}
-	path := fmt.Sprintf("blockchain/models/%s/resetstats", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
-	return
-}
-
-// Opens a session with a specific model, associating it with a provider on the
-// blockchain.
+// Start a session for a model
 func (r *BlockchainModelService) Session(ctx context.Context, id string, body BlockchainModelSessionParams, opts ...option.RequestOption) (res *shared.Session, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
@@ -106,16 +80,32 @@ func (r *BlockchainModelService) Session(ctx context.Context, id string, body Bl
 }
 
 type Model struct {
-	Details ModelDetails `json:"details"`
-	// Unique identifier for the model.
-	ModelID string    `json:"modelID"`
-	JSON    modelJSON `json:"-"`
+	// Unique identifier of the model
+	ID string `json:"id,required"`
+	// Fee for using the model
+	Fee string `json:"fee,required"`
+	// IPFS ID where the model is stored
+	IpfsID string `json:"ipfsID,required"`
+	// Model ID provided by the user
+	ModelID string `json:"modelID,required"`
+	// Name of the model
+	Name string `json:"name,required"`
+	// Amount staked for the model
+	Stake string `json:"stake,required"`
+	// Tags associated with the model
+	Tags []string  `json:"tags"`
+	JSON modelJSON `json:"-"`
 }
 
 // modelJSON contains the JSON metadata for the struct [Model]
 type modelJSON struct {
-	Details     apijson.Field
+	ID          apijson.Field
+	Fee         apijson.Field
+	IpfsID      apijson.Field
 	ModelID     apijson.Field
+	Name        apijson.Field
+	Stake       apijson.Field
+	Tags        apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -128,145 +118,18 @@ func (r modelJSON) RawJSON() string {
 	return r.raw
 }
 
-type ModelDetails struct {
-	Fee     string           `json:"fee" format:"biginteger"`
-	IpfsID  string           `json:"ipfsID"`
-	ModelID string           `json:"modelID"`
-	Name    string           `json:"name"`
-	Stake   string           `json:"stake" format:"biginteger"`
-	Tags    []string         `json:"tags"`
-	JSON    modelDetailsJSON `json:"-"`
-}
-
-// modelDetailsJSON contains the JSON metadata for the struct [ModelDetails]
-type modelDetailsJSON struct {
-	Fee         apijson.Field
-	IpfsID      apijson.Field
-	ModelID     apijson.Field
-	Name        apijson.Field
-	Stake       apijson.Field
-	Tags        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *ModelDetails) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r modelDetailsJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainModelListResponse struct {
-	Fee     string                          `json:"fee" format:"biginteger"`
-	IpfsID  string                          `json:"ipfsID"`
-	ModelID string                          `json:"modelID"`
-	Name    string                          `json:"name"`
-	Stake   string                          `json:"stake" format:"biginteger"`
-	Tags    []string                        `json:"tags"`
-	JSON    blockchainModelListResponseJSON `json:"-"`
-}
-
-// blockchainModelListResponseJSON contains the JSON metadata for the struct
-// [BlockchainModelListResponse]
-type blockchainModelListResponseJSON struct {
-	Fee         apijson.Field
-	IpfsID      apijson.Field
-	ModelID     apijson.Field
-	Name        apijson.Field
-	Stake       apijson.Field
-	Tags        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainModelListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainModelListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainModelDeleteResponse struct {
-	// Transaction hash.
-	Tx   string                            `json:"tx"`
-	JSON blockchainModelDeleteResponseJSON `json:"-"`
-}
-
-// blockchainModelDeleteResponseJSON contains the JSON metadata for the struct
-// [BlockchainModelDeleteResponse]
-type blockchainModelDeleteResponseJSON struct {
-	Tx          apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainModelDeleteResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainModelDeleteResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainModelExistsResponse struct {
-	// Indicates whether the model exists.
-	Exists bool                              `json:"exists"`
-	JSON   blockchainModelExistsResponseJSON `json:"-"`
-}
-
-// blockchainModelExistsResponseJSON contains the JSON metadata for the struct
-// [BlockchainModelExistsResponse]
-type blockchainModelExistsResponseJSON struct {
-	Exists      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainModelExistsResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainModelExistsResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainModelResetstatsResponse struct {
-	// Success message.
-	Message string                                `json:"message"`
-	JSON    blockchainModelResetstatsResponseJSON `json:"-"`
-}
-
-// blockchainModelResetstatsResponseJSON contains the JSON metadata for the struct
-// [BlockchainModelResetstatsResponse]
-type blockchainModelResetstatsResponseJSON struct {
-	Message     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainModelResetstatsResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainModelResetstatsResponseJSON) RawJSON() string {
-	return r.raw
-}
-
 type BlockchainModelNewParams struct {
-	// Fee amount required for model usage.
-	Fee param.Field[string] `json:"fee,required" format:"biginteger"`
-	// IPFS hash storing the model’s data.
+	// Fee for using the model
+	Fee param.Field[string] `json:"fee,required"`
+	// IPFS ID where the model is stored
 	IpfsID param.Field[string] `json:"ipfsID,required"`
-	// Unique identifier for the model.
+	// Model ID provided by the user
 	ModelID param.Field[string] `json:"modelID,required"`
-	// Name of the model.
+	// Name of the model
 	Name param.Field[string] `json:"name,required"`
-	// Stake amount for the model.
-	Stake param.Field[string] `json:"stake,required" format:"biginteger"`
-	// Descriptive tags for categorizing the model.
+	// Amount to stake for the model
+	Stake param.Field[string] `json:"stake,required"`
+	// Tags associated with the model
 	Tags param.Field[[]string] `json:"tags"`
 }
 
@@ -275,8 +138,8 @@ func (r BlockchainModelNewParams) MarshalJSON() (data []byte, err error) {
 }
 
 type BlockchainModelSessionParams struct {
-	// The duration of the session in seconds.
-	SessionDuration param.Field[string] `json:"sessionDuration,required" format:"biginteger"`
+	// Duration of the session
+	SessionDuration param.Field[string] `json:"sessionDuration,required"`
 }
 
 func (r BlockchainModelSessionParams) MarshalJSON() (data []byte, err error) {

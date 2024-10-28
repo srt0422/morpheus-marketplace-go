@@ -25,8 +25,8 @@ func TestProxySessionInitiate(t *testing.T) {
 		option.WithBaseURL(baseURL),
 	)
 	_, err := client.Proxy.Sessions.Initiate(context.TODO(), morpheusmarketplace.ProxySessionInitiateParams{
-		ModelID:         morpheusmarketplace.F("modelId"),
-		SessionDuration: morpheusmarketplace.F("sessionDuration"),
+		ModelID:         morpheusmarketplace.F("model_12345"),
+		SessionDuration: morpheusmarketplace.F("3600"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
@@ -52,7 +52,7 @@ func TestProxySessionProviderClaim(t *testing.T) {
 		context.TODO(),
 		"id",
 		morpheusmarketplace.ProxySessionProviderClaimParams{
-			Claim: morpheusmarketplace.F("claim"),
+			Claim: morpheusmarketplace.F("claim_abc123"),
 		},
 	)
 	if err != nil {
