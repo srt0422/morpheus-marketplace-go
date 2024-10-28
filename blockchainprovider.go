@@ -35,7 +35,7 @@ func NewBlockchainProviderService(opts ...option.RequestOption) (r *BlockchainPr
 	return
 }
 
-// Registers or updates a provider.
+// Create a new provider
 func (r *BlockchainProviderService) New(ctx context.Context, body BlockchainProviderNewParams, opts ...option.RequestOption) (res *Provider, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/providers"
@@ -43,37 +43,42 @@ func (r *BlockchainProviderService) New(ctx context.Context, body BlockchainProv
 	return
 }
 
-// Retrieves a list of all registered providers.
-func (r *BlockchainProviderService) List(ctx context.Context, opts ...option.RequestOption) (res *[]BlockchainProviderListResponse, err error) {
+// List providers
+func (r *BlockchainProviderService) List(ctx context.Context, opts ...option.RequestOption) (res *[]Provider, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/providers"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
-// Removes a provider’s registration from the blockchain.
-func (r *BlockchainProviderService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainProviderDeleteResponse, err error) {
+// Delete a provider
+func (r *BlockchainProviderService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = append(r.Options[:], opts...)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
 	}
 	path := fmt.Sprintf("blockchain/providers/%s", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return
 }
 
 type Provider struct {
-	Details ProviderDetails `json:"details"`
-	// Unique identifier for the provider.
-	ProviderID string       `json:"providerID"`
-	JSON       providerJSON `json:"-"`
+	// Unique identifier of the provider
+	ID string `json:"id,required"`
+	// Endpoint URL of the provider
+	Endpoint string `json:"endpoint,required"`
+	// Amount staked by the provider
+	Stake string       `json:"stake,required"`
+	JSON  providerJSON `json:"-"`
 }
 
 // providerJSON contains the JSON metadata for the struct [Provider]
 type providerJSON struct {
-	Details     apijson.Field
-	ProviderID  apijson.Field
+	ID          apijson.Field
+	Endpoint    apijson.Field
+	Stake       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
@@ -86,82 +91,11 @@ func (r providerJSON) RawJSON() string {
 	return r.raw
 }
 
-type ProviderDetails struct {
-	Endpoint   string              `json:"endpoint"`
-	ProviderID string              `json:"providerID"`
-	Stake      string              `json:"stake" format:"biginteger"`
-	JSON       providerDetailsJSON `json:"-"`
-}
-
-// providerDetailsJSON contains the JSON metadata for the struct [ProviderDetails]
-type providerDetailsJSON struct {
-	Endpoint    apijson.Field
-	ProviderID  apijson.Field
-	Stake       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *ProviderDetails) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r providerDetailsJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainProviderListResponse struct {
-	Endpoint   string                             `json:"endpoint"`
-	ProviderID string                             `json:"providerID"`
-	Stake      string                             `json:"stake" format:"biginteger"`
-	JSON       blockchainProviderListResponseJSON `json:"-"`
-}
-
-// blockchainProviderListResponseJSON contains the JSON metadata for the struct
-// [BlockchainProviderListResponse]
-type blockchainProviderListResponseJSON struct {
-	Endpoint    apijson.Field
-	ProviderID  apijson.Field
-	Stake       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainProviderListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainProviderListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainProviderDeleteResponse struct {
-	// Transaction hash.
-	Tx   string                               `json:"tx"`
-	JSON blockchainProviderDeleteResponseJSON `json:"-"`
-}
-
-// blockchainProviderDeleteResponseJSON contains the JSON metadata for the struct
-// [BlockchainProviderDeleteResponse]
-type blockchainProviderDeleteResponseJSON struct {
-	Tx          apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainProviderDeleteResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainProviderDeleteResponseJSON) RawJSON() string {
-	return r.raw
-}
-
 type BlockchainProviderNewParams struct {
-	// Endpoint URL of the provider.
+	// Endpoint URL of the provider
 	Endpoint param.Field[string] `json:"endpoint,required"`
-	// Amount of tokens staked by the provider.
-	Stake param.Field[string] `json:"stake,required" format:"biginteger"`
+	// Amount to stake for the provider
+	Stake param.Field[string] `json:"stake,required"`
 }
 
 func (r BlockchainProviderNewParams) MarshalJSON() (data []byte, err error) {

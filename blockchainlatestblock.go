@@ -30,7 +30,7 @@ func NewBlockchainLatestBlockService(opts ...option.RequestOption) (r *Blockchai
 	return
 }
 
-// Retrieves the latest block number from the blockchain.
+// Get latest block number
 func (r *BlockchainLatestBlockService) Get(ctx context.Context, opts ...option.RequestOption) (res *LatestBlock, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/latestBlock"
@@ -39,14 +39,14 @@ func (r *BlockchainLatestBlockService) Get(ctx context.Context, opts ...option.R
 }
 
 type LatestBlock struct {
-	// Latest block number.
-	Block int64           `json:"block"`
-	JSON  latestBlockJSON `json:"-"`
+	// Latest block number on the blockchain
+	BlockNumber string          `json:"blockNumber,required"`
+	JSON        latestBlockJSON `json:"-"`
 }
 
 // latestBlockJSON contains the JSON metadata for the struct [LatestBlock]
 type latestBlockJSON struct {
-	Block       apijson.Field
+	BlockNumber apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }

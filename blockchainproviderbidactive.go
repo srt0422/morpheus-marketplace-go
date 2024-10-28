@@ -33,8 +33,8 @@ func NewBlockchainProviderBidActiveService(opts ...option.RequestOption) (r *Blo
 	return
 }
 
-// Retrieves active bids associated with a specific provider.
-func (r *BlockchainProviderBidActiveService) List(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.Bid, err error) {
+// List active bids for a provider
+func (r *BlockchainProviderBidActiveService) List(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainProviderBidActiveListResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -46,24 +46,17 @@ func (r *BlockchainProviderBidActiveService) List(ctx context.Context, id string
 }
 
 type BlockchainProviderBidActiveListResponse struct {
-	BidID          string                                      `json:"bidID"`
-	ModelID        string                                      `json:"modelID"`
-	PricePerSecond string                                      `json:"pricePerSecond" format:"biginteger"`
-	ProviderID     string                                      `json:"providerID"`
-	Status         string                                      `json:"status"`
-	JSON           blockchainProviderBidActiveListResponseJSON `json:"-"`
+	// List of bids
+	Bids []shared.Bid                                `json:"bids,required"`
+	JSON blockchainProviderBidActiveListResponseJSON `json:"-"`
 }
 
 // blockchainProviderBidActiveListResponseJSON contains the JSON metadata for the
 // struct [BlockchainProviderBidActiveListResponse]
 type blockchainProviderBidActiveListResponseJSON struct {
-	BidID          apijson.Field
-	ModelID        apijson.Field
-	PricePerSecond apijson.Field
-	ProviderID     apijson.Field
-	Status         apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
+	Bids        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
 func (r *BlockchainProviderBidActiveListResponse) UnmarshalJSON(data []byte) (err error) {

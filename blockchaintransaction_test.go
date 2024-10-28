@@ -13,7 +13,7 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
-func TestBlockchainTransactionListWithOptionalParams(t *testing.T) {
+func TestBlockchainTransactionList(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -24,10 +24,7 @@ func TestBlockchainTransactionListWithOptionalParams(t *testing.T) {
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
 	)
-	_, err := client.Blockchain.Transactions.List(context.TODO(), morpheusmarketplace.BlockchainTransactionListParams{
-		Limit: morpheusmarketplace.F(int64(0)),
-		Page:  morpheusmarketplace.F(int64(0)),
-	})
+	_, err := client.Blockchain.Transactions.List(context.TODO())
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

@@ -32,8 +32,8 @@ func NewBlockchainModelStatService(opts ...option.RequestOption) (r *BlockchainM
 	return
 }
 
-// Retrieves the statistics of a model.
-func (r *BlockchainModelStatService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *ModelStats, err error) {
+// Retrieve statistics for a model
+func (r *BlockchainModelStatService) List(ctx context.Context, id string, opts ...option.RequestOption) (res *ModelStats, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -45,13 +45,16 @@ func (r *BlockchainModelStatService) Get(ctx context.Context, id string, opts ..
 }
 
 type ModelStats struct {
-	// Statistics of the model.
-	Stats interface{}    `json:"stats"`
-	JSON  modelStatsJSON `json:"-"`
+	// ID of the model
+	ModelID string `json:"modelID,required"`
+	// Statistics related to the model
+	Stats map[string]interface{} `json:"stats,required"`
+	JSON  modelStatsJSON         `json:"-"`
 }
 
 // modelStatsJSON contains the JSON metadata for the struct [ModelStats]
 type modelStatsJSON struct {
+	ModelID     apijson.Field
 	Stats       apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field

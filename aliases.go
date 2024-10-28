@@ -13,7 +13,10 @@ type Error = apierror.Error
 type Bid = shared.Bid
 
 // This is an alias to an internal type.
-type BidItem = shared.BidItem
+type Budget = shared.Budget
 
 // This is an alias to an internal type.
 type Session = shared.Session
+
+// This is an alias to an internal type.
+type SessionList = shared.SessionList

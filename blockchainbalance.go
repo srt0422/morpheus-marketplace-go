@@ -6,7 +6,6 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
@@ -30,34 +29,10 @@ func NewBlockchainBalanceService(opts ...option.RequestOption) (r *BlockchainBal
 	return
 }
 
-// Retrieves the ETH and MOR token balances of the user.
+// Retrieve balance
 func (r *BlockchainBalanceService) Get(ctx context.Context, opts ...option.RequestOption) (res *Balance, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/balance"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
-}
-
-type Balance struct {
-	// ETH balance.
-	Eth string `json:"ETH" format:"biginteger"`
-	// MOR token balance.
-	Mor  string      `json:"MOR" format:"biginteger"`
-	JSON balanceJSON `json:"-"`
-}
-
-// balanceJSON contains the JSON metadata for the struct [Balance]
-type balanceJSON struct {
-	Eth         apijson.Field
-	Mor         apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Balance) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r balanceJSON) RawJSON() string {
-	return r.raw
 }
