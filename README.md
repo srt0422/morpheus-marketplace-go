@@ -49,17 +49,11 @@ import (
 
 func main() {
 	client := morpheusmarketplace.NewClient()
-	model, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("fee"),
-		IpfsID:  morpheusmarketplace.F("ipfsID"),
-		ModelID: morpheusmarketplace.F("modelID"),
-		Name:    morpheusmarketplace.F("name"),
-		Stake:   morpheusmarketplace.F("stake"),
-	})
+	balance, err := client.Blockchain.Balance.Get(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", model.Details)
+	fmt.Printf("%+v\n", balance.Balance)
 }
 
 ```
@@ -148,7 +142,7 @@ client := morpheusmarketplace.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Blockchain.Models.New(context.TODO(), ...,
+client.Blockchain.Balance.Get(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -177,20 +171,14 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
-	Fee:     morpheusmarketplace.F("fee"),
-	IpfsID:  morpheusmarketplace.F("ipfsID"),
-	ModelID: morpheusmarketplace.F("modelID"),
-	Name:    morpheusmarketplace.F("name"),
-	Stake:   morpheusmarketplace.F("stake"),
-})
+_, err := client.Blockchain.Balance.Get(context.TODO())
 if err != nil {
 	var apierr *morpheusmarketplace.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/blockchain/models": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/blockchain/balance": 400 Bad Request { ... }
 }
 ```
 
@@ -208,15 +196,8 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Blockchain.Models.New(
+client.Blockchain.Balance.Get(
 	ctx,
-	morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("fee"),
-		IpfsID:  morpheusmarketplace.F("ipfsID"),
-		ModelID: morpheusmarketplace.F("modelID"),
-		Name:    morpheusmarketplace.F("name"),
-		Stake:   morpheusmarketplace.F("stake"),
-	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -250,17 +231,7 @@ client := morpheusmarketplace.NewClient(
 )
 
 // Override per-request:
-client.Blockchain.Models.New(
-	context.TODO(),
-	morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("fee"),
-		IpfsID:  morpheusmarketplace.F("ipfsID"),
-		ModelID: morpheusmarketplace.F("modelID"),
-		Name:    morpheusmarketplace.F("name"),
-		Stake:   morpheusmarketplace.F("stake"),
-	},
-	option.WithMaxRetries(5),
-)
+client.Blockchain.Balance.Get(context.TODO(), option.WithMaxRetries(5))
 ```
 
 ### Making custom/undocumented requests

@@ -34,7 +34,7 @@ func NewProxySessionService(opts ...option.RequestOption) (r *ProxySessionServic
 	return
 }
 
-// Initializes a new session with the provider for usage.
+// Initiate a proxy session
 func (r *ProxySessionService) Initiate(ctx context.Context, body ProxySessionInitiateParams, opts ...option.RequestOption) (res *shared.Session, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "proxy/sessions/initiate"
@@ -42,8 +42,8 @@ func (r *ProxySessionService) Initiate(ctx context.Context, body ProxySessionIni
 	return
 }
 
-// Allows a provider to claim their balance for a specific session.
-func (r *ProxySessionService) ProviderClaim(ctx context.Context, id string, body ProxySessionProviderClaimParams, opts ...option.RequestOption) (res *ProxySessionProviderClaimResponse, err error) {
+// Claim provider balance
+func (r *ProxySessionService) ProviderClaim(ctx context.Context, id string, body ProxySessionProviderClaimParams, opts ...option.RequestOption) (res *ClaimableBalance, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -54,8 +54,8 @@ func (r *ProxySessionService) ProviderClaim(ctx context.Context, id string, body
 	return
 }
 
-// Retrieves the claimable balance for a provider from a session.
-func (r *ProxySessionService) ProviderClaimableBalance(ctx context.Context, id string, opts ...option.RequestOption) (res *ProxySessionProviderClaimableBalanceResponse, err error) {
+// Get provider claimable balance
+func (r *ProxySessionService) ProviderClaimableBalance(ctx context.Context, id string, opts ...option.RequestOption) (res *ClaimableBalance, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -66,55 +66,33 @@ func (r *ProxySessionService) ProviderClaimableBalance(ctx context.Context, id s
 	return
 }
 
-type ProxySessionProviderClaimResponse struct {
-	// Transaction hash.
-	Tx   string                                `json:"tx"`
-	JSON proxySessionProviderClaimResponseJSON `json:"-"`
+type ClaimableBalance struct {
+	// Amount claimable by the provider
+	Balance string               `json:"balance,required"`
+	JSON    claimableBalanceJSON `json:"-"`
 }
 
-// proxySessionProviderClaimResponseJSON contains the JSON metadata for the struct
-// [ProxySessionProviderClaimResponse]
-type proxySessionProviderClaimResponseJSON struct {
-	Tx          apijson.Field
+// claimableBalanceJSON contains the JSON metadata for the struct
+// [ClaimableBalance]
+type claimableBalanceJSON struct {
+	Balance     apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
 }
 
-func (r *ProxySessionProviderClaimResponse) UnmarshalJSON(data []byte) (err error) {
+func (r *ClaimableBalance) UnmarshalJSON(data []byte) (err error) {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-func (r proxySessionProviderClaimResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type ProxySessionProviderClaimableBalanceResponse struct {
-	// Claimable balance for the provider.
-	ClaimableBalance string                                           `json:"claimableBalance" format:"biginteger"`
-	JSON             proxySessionProviderClaimableBalanceResponseJSON `json:"-"`
-}
-
-// proxySessionProviderClaimableBalanceResponseJSON contains the JSON metadata for
-// the struct [ProxySessionProviderClaimableBalanceResponse]
-type proxySessionProviderClaimableBalanceResponseJSON struct {
-	ClaimableBalance apijson.Field
-	raw              string
-	ExtraFields      map[string]apijson.Field
-}
-
-func (r *ProxySessionProviderClaimableBalanceResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r proxySessionProviderClaimableBalanceResponseJSON) RawJSON() string {
+func (r claimableBalanceJSON) RawJSON() string {
 	return r.raw
 }
 
 type ProxySessionInitiateParams struct {
-	// Model ID for the session.
+	// Model ID to initiate session with
 	ModelID param.Field[string] `json:"modelId,required"`
-	// Duration for which the session will remain active.
-	SessionDuration param.Field[string] `json:"sessionDuration,required" format:"biginteger"`
+	// Duration of the session
+	SessionDuration param.Field[string] `json:"sessionDuration,required"`
 }
 
 func (r ProxySessionInitiateParams) MarshalJSON() (data []byte, err error) {
@@ -122,8 +100,8 @@ func (r ProxySessionInitiateParams) MarshalJSON() (data []byte, err error) {
 }
 
 type ProxySessionProviderClaimParams struct {
-	// Amount to claim.
-	Claim param.Field[string] `json:"claim,required" format:"biginteger"`
+	// Claim identifier
+	Claim param.Field[string] `json:"claim,required"`
 }
 
 func (r ProxySessionProviderClaimParams) MarshalJSON() (data []byte, err error) {

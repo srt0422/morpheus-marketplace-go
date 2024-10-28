@@ -26,10 +26,10 @@ func TestBlockchainProviderBidListWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Blockchain.Providers.Bids.List(
 		context.TODO(),
-		"id",
+		"0x1234567890abcdef1234567890abcdef12345678",
 		morpheusmarketplace.BlockchainProviderBidListParams{
-			Limit:  morpheusmarketplace.F(int64(0)),
-			Offset: morpheusmarketplace.F("offset"),
+			Limit:  morpheusmarketplace.F(int64(10)),
+			Offset: morpheusmarketplace.F(int64(0)),
 		},
 	)
 	if err != nil {

@@ -38,8 +38,8 @@ func NewBlockchainProviderBidService(opts ...option.RequestOption) (r *Blockchai
 	return
 }
 
-// Retrieves bids placed by a specific provider.
-func (r *BlockchainProviderBidService) List(ctx context.Context, id string, query BlockchainProviderBidListParams, opts ...option.RequestOption) (res *shared.Bid, err error) {
+// List bids for a provider
+func (r *BlockchainProviderBidService) List(ctx context.Context, id string, query BlockchainProviderBidListParams, opts ...option.RequestOption) (res *BlockchainProviderBidListResponse, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -51,24 +51,17 @@ func (r *BlockchainProviderBidService) List(ctx context.Context, id string, quer
 }
 
 type BlockchainProviderBidListResponse struct {
-	BidID          string                                `json:"bidID"`
-	ModelID        string                                `json:"modelID"`
-	PricePerSecond string                                `json:"pricePerSecond" format:"biginteger"`
-	ProviderID     string                                `json:"providerID"`
-	Status         string                                `json:"status"`
-	JSON           blockchainProviderBidListResponseJSON `json:"-"`
+	// List of bids
+	Bids []shared.Bid                          `json:"bids,required"`
+	JSON blockchainProviderBidListResponseJSON `json:"-"`
 }
 
 // blockchainProviderBidListResponseJSON contains the JSON metadata for the struct
 // [BlockchainProviderBidListResponse]
 type blockchainProviderBidListResponseJSON struct {
-	BidID          apijson.Field
-	ModelID        apijson.Field
-	PricePerSecond apijson.Field
-	ProviderID     apijson.Field
-	Status         apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
+	Bids        apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
 }
 
 func (r *BlockchainProviderBidListResponse) UnmarshalJSON(data []byte) (err error) {
@@ -80,10 +73,10 @@ func (r blockchainProviderBidListResponseJSON) RawJSON() string {
 }
 
 type BlockchainProviderBidListParams struct {
-	// Limit for pagination.
+	// Maximum number of results to return
 	Limit param.Field[int64] `query:"limit"`
-	// Offset for pagination.
-	Offset param.Field[string] `query:"offset" format:"biginteger"`
+	// Number of results to skip
+	Offset param.Field[int64] `query:"offset"`
 }
 
 // URLQuery serializes [BlockchainProviderBidListParams]'s query parameters as
