@@ -23,6 +23,7 @@ func TestBlockchainTransactionList(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Transactions.List(context.TODO())
 	if err != nil {

@@ -23,6 +23,7 @@ func TestBlockchainProviderNew(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Providers.New(context.TODO(), morpheusmarketplace.BlockchainProviderNewParams{
 		Endpoint: morpheusmarketplace.F("https://provider.example.com"),
@@ -47,6 +48,7 @@ func TestBlockchainProviderList(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Providers.List(context.TODO())
 	if err != nil {
@@ -68,6 +70,7 @@ func TestBlockchainProviderDelete(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	err := client.Blockchain.Providers.Delete(context.TODO(), "0x1234567890abcdef1234567890abcdef12345678")
 	if err != nil {

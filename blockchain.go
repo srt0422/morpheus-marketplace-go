@@ -20,15 +20,17 @@ import (
 // the [NewBlockchainService] method instead.
 type BlockchainService struct {
 	Options      []option.RequestOption
+	Eth          *BlockchainEthService
+	Mor          *BlockchainMorService
 	Models       *BlockchainModelService
+	Bids         *BlockchainBidService
+	Sessions     *BlockchainSessionService
 	Providers    *BlockchainProviderService
 	Balance      *BlockchainBalanceService
 	Allowance    *BlockchainAllowanceService
 	LatestBlock  *BlockchainLatestBlockService
 	Token        *BlockchainTokenService
 	Transactions *BlockchainTransactionService
-	Bids         *BlockchainBidService
-	Sessions     *BlockchainSessionService
 }
 
 // NewBlockchainService generates a new service that applies the given options to
@@ -37,15 +39,17 @@ type BlockchainService struct {
 func NewBlockchainService(opts ...option.RequestOption) (r *BlockchainService) {
 	r = &BlockchainService{}
 	r.Options = opts
+	r.Eth = NewBlockchainEthService(opts...)
+	r.Mor = NewBlockchainMorService(opts...)
 	r.Models = NewBlockchainModelService(opts...)
+	r.Bids = NewBlockchainBidService(opts...)
+	r.Sessions = NewBlockchainSessionService(opts...)
 	r.Providers = NewBlockchainProviderService(opts...)
 	r.Balance = NewBlockchainBalanceService(opts...)
 	r.Allowance = NewBlockchainAllowanceService(opts...)
 	r.LatestBlock = NewBlockchainLatestBlockService(opts...)
 	r.Token = NewBlockchainTokenService(opts...)
 	r.Transactions = NewBlockchainTransactionService(opts...)
-	r.Bids = NewBlockchainBidService(opts...)
-	r.Sessions = NewBlockchainSessionService(opts...)
 	return
 }
 
@@ -58,43 +62,6 @@ func (r *BlockchainService) Approve(ctx context.Context, body BlockchainApproveP
 	return
 }
 
-// Send ETH to a specified address
-func (r *BlockchainService) EthSend(ctx context.Context, body BlockchainEthSendParams, opts ...option.RequestOption) (res *Balance, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "blockchain/send/eth"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-// Send MOR to a specified address
-func (r *BlockchainService) MorSend(ctx context.Context, body BlockchainMorSendParams, opts ...option.RequestOption) (res *Balance, err error) {
-	opts = append(r.Options[:], opts...)
-	path := "blockchain/send/mor"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
-	return
-}
-
-type Balance struct {
-	// Current balance after the transaction
-	Balance string      `json:"balance,required"`
-	JSON    balanceJSON `json:"-"`
-}
-
-// balanceJSON contains the JSON metadata for the struct [Balance]
-type balanceJSON struct {
-	Balance     apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Balance) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r balanceJSON) RawJSON() string {
-	return r.raw
-}
-
 type BlockchainApproveParams struct {
 	// Amount to approve
 	Amount param.Field[string] `json:"amount,required"`
@@ -103,27 +70,5 @@ type BlockchainApproveParams struct {
 }
 
 func (r BlockchainApproveParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type BlockchainEthSendParams struct {
-	// Amount of ETH to send
-	Amount param.Field[string] `json:"amount,required"`
-	// Ethereum address to send ETH to
-	To param.Field[string] `json:"to,required"`
-}
-
-func (r BlockchainEthSendParams) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
-type BlockchainMorSendParams struct {
-	// Amount of MOR to send
-	Amount param.Field[string] `json:"amount,required"`
-	// Ethereum address to send MOR to
-	To param.Field[string] `json:"to,required"`
-}
-
-func (r BlockchainMorSendParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }
