@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
-	"github.com/srt0422/morpheus-marketplace-go/internal/param"
-	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/srt0422/morpheus-marketplace-go/option"
-	"github.com/srt0422/morpheus-marketplace-go/shared"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apijson"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/param"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go/shared"
 )
 
 // BlockchainModelService contains methods and other services that help with
@@ -115,6 +115,30 @@ func (r *Model) UnmarshalJSON(data []byte) (err error) {
 }
 
 func (r modelJSON) RawJSON() string {
+	return r.raw
+}
+
+type Stats struct {
+	// ID of the model
+	ModelID string `json:"modelID,required"`
+	// Statistics related to the model
+	Stats map[string]interface{} `json:"stats,required"`
+	JSON  statsJSON              `json:"-"`
+}
+
+// statsJSON contains the JSON metadata for the struct [Stats]
+type statsJSON struct {
+	ModelID     apijson.Field
+	Stats       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Stats) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r statsJSON) RawJSON() string {
 	return r.raw
 }
 

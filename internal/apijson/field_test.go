@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/param"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/param"
 )
 
 type Struct struct {

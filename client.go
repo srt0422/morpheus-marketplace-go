@@ -5,35 +5,35 @@ package morpheusmarketplace
 import (
 	"context"
 	"net/http"
+	"os"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with
 // interacting with the morpheus-marketplace API. You should not instantiate this
 // client directly, and instead use the [NewClient] method instead.
 type Client struct {
-	Options            []option.RequestOption
-	Blockchain         *BlockchainService
-	BlockchainBids     *BlockchainBidService
-	BlockchainSessions *BlockchainSessionService
-	Proxy              *ProxyService
+	Options    []option.RequestOption
+	Blockchain *BlockchainService
+	Proxy      *ProxyService
 }
 
 // NewClient generates a new client with the default option read from the
-// environment (). The option passed in as arguments are applied after these
-// default arguments, and all option will be passed down to the services and
+// environment (X_API_KEY). The option passed in as arguments are applied after
+// these default arguments, and all option will be passed down to the services and
 // requests that this client makes.
 func NewClient(opts ...option.RequestOption) (r *Client) {
 	defaults := []option.RequestOption{option.WithEnvironmentProduction()}
+	if o, ok := os.LookupEnv("X_API_KEY"); ok {
+		defaults = append(defaults, option.WithAPIKey(o))
+	}
 	opts = append(defaults, opts...)
 
 	r = &Client{Options: opts}
 
 	r.Blockchain = NewBlockchainService(opts...)
-	r.BlockchainBids = NewBlockchainBidService(opts...)
-	r.BlockchainSessions = NewBlockchainSessionService(opts...)
 	r.Proxy = NewProxyService(opts...)
 
 	return

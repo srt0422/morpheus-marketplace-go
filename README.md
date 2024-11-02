@@ -1,6 +1,6 @@
 # Morpheus Marketplace Go API Library
 
-<a href="https://pkg.go.dev/github.com/srt0422/morpheus-marketplace-go"><img src="https://pkg.go.dev/badge/github.com/srt0422/morpheus-marketplace-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/stainless-sdks/morpheus-marketplace-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/morpheus-marketplace-go.svg" alt="Go Reference"></a>
 
 The Morpheus Marketplace Go library provides convenient access to [the Morpheus Marketplace REST
 API](https://docs.morpheus-marketplace.com) from applications written in Go. The full API of this library can be found in [api.md](api.md).
@@ -9,25 +9,17 @@ It is generated with [Stainless](https://www.stainlessapi.com/).
 
 ## Installation
 
-<!-- x-release-please-start-version -->
-
 ```go
 import (
-	"github.com/srt0422/morpheus-marketplace-go" // imported as morpheusmarketplace
+	"github.com/stainless-sdks/morpheus-marketplace-go" // imported as morpheusmarketplace
 )
 ```
 
-<!-- x-release-please-end -->
-
 Or to pin the version:
 
-<!-- x-release-please-start-version -->
-
 ```sh
-go get -u 'github.com/srt0422/morpheus-marketplace-go@v0.0.1-alpha.0'
+go get -u 'github.com/stainless-sdks/morpheus-marketplace-go@v0.0.1-alpha.0'
 ```
-
-<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -44,16 +36,25 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/srt0422/morpheus-marketplace-go"
+	"github.com/stainless-sdks/morpheus-marketplace-go"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
 func main() {
-	client := morpheusmarketplace.NewClient()
-	balance, err := client.Blockchain.Balance.Get(context.TODO())
+	client := morpheusmarketplace.NewClient(
+		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("X_API_KEY")
+	)
+	model, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", balance.Balance)
+	fmt.Printf("%+v\n", model.ID)
 }
 
 ```
@@ -142,7 +143,7 @@ client := morpheusmarketplace.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Blockchain.Balance.Get(context.TODO(), ...,
+client.Blockchain.Models.New(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -150,7 +151,7 @@ client.Blockchain.Balance.Get(context.TODO(), ...,
 )
 ```
 
-See the [full list of request options](https://pkg.go.dev/github.com/srt0422/morpheus-marketplace-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/morpheus-marketplace-go/option).
 
 ### Pagination
 
@@ -171,14 +172,20 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Blockchain.Balance.Get(context.TODO())
+_, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
+	Fee:     morpheusmarketplace.F("0.01"),
+	IpfsID:  morpheusmarketplace.F("QmX..."),
+	ModelID: morpheusmarketplace.F("mod-67890"),
+	Name:    morpheusmarketplace.F("Image Recognition Model"),
+	Stake:   morpheusmarketplace.F("1000"),
+})
 if err != nil {
 	var apierr *morpheusmarketplace.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/blockchain/balance": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/blockchain/models": 400 Bad Request { ... }
 }
 ```
 
@@ -196,8 +203,15 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Blockchain.Balance.Get(
+client.Blockchain.Models.New(
 	ctx,
+	morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -231,7 +245,17 @@ client := morpheusmarketplace.NewClient(
 )
 
 // Override per-request:
-client.Blockchain.Balance.Get(context.TODO(), option.WithMaxRetries(5))
+client.Blockchain.Models.New(
+	context.TODO(),
+	morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	},
+	option.WithMaxRetries(5),
+)
 ```
 
 ### Making custom/undocumented requests
@@ -329,7 +353,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/srt0422/morpheus-marketplace-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/morpheus-marketplace-go/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 

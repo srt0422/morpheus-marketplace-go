@@ -4,6 +4,7 @@ package morpheusmarketplace_test
 
 import (
 	"context"
+	"errors"
 	"os"
 	"testing"
 
@@ -12,7 +13,7 @@ import (
 	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
-func TestUsage(t *testing.T) {
+func TestBlockchainSessionBudgetList(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -24,15 +25,12 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	model, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("0.01"),
-		IpfsID:  morpheusmarketplace.F("QmX..."),
-		ModelID: morpheusmarketplace.F("mod-67890"),
-		Name:    morpheusmarketplace.F("Image Recognition Model"),
-		Stake:   morpheusmarketplace.F("1000"),
-	})
+	_, err := client.Blockchain.Sessions.Budget.List(context.TODO())
 	if err != nil {
-		t.Error(err)
+		var apierr *morpheusmarketplace.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", model.ID)
 }

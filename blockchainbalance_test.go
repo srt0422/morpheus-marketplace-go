@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
-	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
-	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/testutil"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
 func TestBlockchainBalanceGet(t *testing.T) {
@@ -23,6 +23,7 @@ func TestBlockchainBalanceGet(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Balance.Get(context.TODO())
 	if err != nil {

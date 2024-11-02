@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
-	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
-	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/testutil"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
 func TestBlockchainProviderBidListWithOptionalParams(t *testing.T) {
@@ -23,6 +23,7 @@ func TestBlockchainProviderBidListWithOptionalParams(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Providers.Bids.List(
 		context.TODO(),
@@ -32,6 +33,28 @@ func TestBlockchainProviderBidListWithOptionalParams(t *testing.T) {
 			Offset: morpheusmarketplace.F(int64(0)),
 		},
 	)
+	if err != nil {
+		var apierr *morpheusmarketplace.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestBlockchainProviderBidActive(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := morpheusmarketplace.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Blockchain.Providers.Bids.Active(context.TODO(), "0x1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

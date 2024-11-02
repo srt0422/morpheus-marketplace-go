@@ -17,10 +17,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal"
-	"github.com/srt0422/morpheus-marketplace-go/internal/apierror"
-	"github.com/srt0422/morpheus-marketplace-go/internal/apiform"
-	"github.com/srt0422/morpheus-marketplace-go/internal/apiquery"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apierror"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apiform"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {
@@ -172,6 +172,7 @@ type RequestConfig struct {
 	BaseURL        *url.URL
 	HTTPClient     *http.Client
 	Middlewares    []middleware
+	APIKey         string
 	// If ResponseBodyInto not nil, then we will attempt to deserialize into
 	// ResponseBodyInto. If Destination is a []byte, then it will return the body as
 	// is.
@@ -480,6 +481,7 @@ func (cfg *RequestConfig) Clone(ctx context.Context) *RequestConfig {
 		BaseURL:        cfg.BaseURL,
 		HTTPClient:     cfg.HTTPClient,
 		Middlewares:    cfg.Middlewares,
+		APIKey:         cfg.APIKey,
 	}
 
 	return new

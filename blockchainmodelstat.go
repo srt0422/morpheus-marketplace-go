@@ -8,9 +8,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
-	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
 // BlockchainModelStatService contains methods and other services that help with
@@ -33,7 +32,7 @@ func NewBlockchainModelStatService(opts ...option.RequestOption) (r *BlockchainM
 }
 
 // Retrieve statistics for a model
-func (r *BlockchainModelStatService) List(ctx context.Context, id string, opts ...option.RequestOption) (res *ModelStats, err error) {
+func (r *BlockchainModelStatService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *Stats, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -42,28 +41,4 @@ func (r *BlockchainModelStatService) List(ctx context.Context, id string, opts .
 	path := fmt.Sprintf("blockchain/models/%s/stats", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
-}
-
-type ModelStats struct {
-	// ID of the model
-	ModelID string `json:"modelID,required"`
-	// Statistics related to the model
-	Stats map[string]interface{} `json:"stats,required"`
-	JSON  modelStatsJSON         `json:"-"`
-}
-
-// modelStatsJSON contains the JSON metadata for the struct [ModelStats]
-type modelStatsJSON struct {
-	ModelID     apijson.Field
-	Stats       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *ModelStats) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r modelStatsJSON) RawJSON() string {
-	return r.raw
 }

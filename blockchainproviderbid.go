@@ -9,12 +9,11 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
-	"github.com/srt0422/morpheus-marketplace-go/internal/apiquery"
-	"github.com/srt0422/morpheus-marketplace-go/internal/param"
-	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/srt0422/morpheus-marketplace-go/option"
-	"github.com/srt0422/morpheus-marketplace-go/shared"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apiquery"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/param"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go/shared"
 )
 
 // BlockchainProviderBidService contains methods and other services that help with
@@ -25,7 +24,6 @@ import (
 // the [NewBlockchainProviderBidService] method instead.
 type BlockchainProviderBidService struct {
 	Options []option.RequestOption
-	Active  *BlockchainProviderBidActiveService
 }
 
 // NewBlockchainProviderBidService generates a new service that applies the given
@@ -34,12 +32,11 @@ type BlockchainProviderBidService struct {
 func NewBlockchainProviderBidService(opts ...option.RequestOption) (r *BlockchainProviderBidService) {
 	r = &BlockchainProviderBidService{}
 	r.Options = opts
-	r.Active = NewBlockchainProviderBidActiveService(opts...)
 	return
 }
 
 // List bids for a provider
-func (r *BlockchainProviderBidService) List(ctx context.Context, id string, query BlockchainProviderBidListParams, opts ...option.RequestOption) (res *BlockchainProviderBidListResponse, err error) {
+func (r *BlockchainProviderBidService) List(ctx context.Context, id string, query BlockchainProviderBidListParams, opts ...option.RequestOption) (res *shared.BidList, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -50,26 +47,16 @@ func (r *BlockchainProviderBidService) List(ctx context.Context, id string, quer
 	return
 }
 
-type BlockchainProviderBidListResponse struct {
-	// List of bids
-	Bids []shared.Bid                          `json:"bids,required"`
-	JSON blockchainProviderBidListResponseJSON `json:"-"`
-}
-
-// blockchainProviderBidListResponseJSON contains the JSON metadata for the struct
-// [BlockchainProviderBidListResponse]
-type blockchainProviderBidListResponseJSON struct {
-	Bids        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainProviderBidListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainProviderBidListResponseJSON) RawJSON() string {
-	return r.raw
+// List active bids for a provider
+func (r *BlockchainProviderBidService) Active(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.BidList, err error) {
+	opts = append(r.Options[:], opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("blockchain/providers/%s/bids/active", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return
 }
 
 type BlockchainProviderBidListParams struct {

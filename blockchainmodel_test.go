@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
-	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
-	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/testutil"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
 func TestBlockchainModelNewWithOptionalParams(t *testing.T) {
@@ -23,6 +23,7 @@ func TestBlockchainModelNewWithOptionalParams(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
 		Fee:     morpheusmarketplace.F("0.01"),
@@ -51,6 +52,7 @@ func TestBlockchainModelList(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Models.List(context.TODO())
 	if err != nil {
@@ -72,6 +74,7 @@ func TestBlockchainModelDelete(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	err := client.Blockchain.Models.Delete(context.TODO(), "id")
 	if err != nil {
@@ -93,6 +96,7 @@ func TestBlockchainModelSession(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Models.Session(
 		context.TODO(),

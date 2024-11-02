@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/srt0422/morpheus-marketplace-go"
-	"github.com/srt0422/morpheus-marketplace-go/internal"
-	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
 )
 
 type closureTransport struct {
@@ -37,7 +37,13 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Blockchain.Balance.Get(context.Background())
+	client.Blockchain.Models.New(context.Background(), morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if userAgent != fmt.Sprintf("MorpheusMarketplace/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
 	}
@@ -60,7 +66,13 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	res, err := client.Blockchain.Balance.Get(context.Background())
+	res, err := client.Blockchain.Models.New(context.Background(), morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if err == nil || res != nil {
 		t.Error("Expected there to be a cancel error and for the response to be nil")
 	}
@@ -94,7 +106,13 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	res, err := client.Blockchain.Balance.Get(context.Background())
+	res, err := client.Blockchain.Models.New(context.Background(), morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if err == nil || res != nil {
 		t.Error("Expected there to be a cancel error and for the response to be nil")
 	}
@@ -123,7 +141,13 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	res, err := client.Blockchain.Balance.Get(context.Background())
+	res, err := client.Blockchain.Models.New(context.Background(), morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if err == nil || res != nil {
 		t.Error("Expected there to be a cancel error and for the response to be nil")
 	}
@@ -151,7 +175,13 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	res, err := client.Blockchain.Balance.Get(context.Background())
+	res, err := client.Blockchain.Models.New(context.Background(), morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if err == nil || res != nil {
 		t.Error("Expected there to be a cancel error and for the response to be nil")
 	}
@@ -173,7 +203,13 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	res, err := client.Blockchain.Balance.Get(cancelCtx)
+	res, err := client.Blockchain.Models.New(cancelCtx, morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if err == nil || res != nil {
 		t.Error("Expected there to be a cancel error and for the response to be nil")
 	}
@@ -192,7 +228,13 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	res, err := client.Blockchain.Balance.Get(cancelCtx)
+	res, err := client.Blockchain.Models.New(cancelCtx, morpheusmarketplace.BlockchainModelNewParams{
+		Fee:     morpheusmarketplace.F("0.01"),
+		IpfsID:  morpheusmarketplace.F("QmX..."),
+		ModelID: morpheusmarketplace.F("mod-67890"),
+		Name:    morpheusmarketplace.F("Image Recognition Model"),
+		Stake:   morpheusmarketplace.F("1000"),
+	})
 	if err == nil || res != nil {
 		t.Error("expected there to be a cancel error and for the response to be nil")
 	}
@@ -217,7 +259,13 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		res, err := client.Blockchain.Balance.Get(deadlineCtx)
+		res, err := client.Blockchain.Models.New(deadlineCtx, morpheusmarketplace.BlockchainModelNewParams{
+			Fee:     morpheusmarketplace.F("0.01"),
+			IpfsID:  morpheusmarketplace.F("QmX..."),
+			ModelID: morpheusmarketplace.F("mod-67890"),
+			Name:    morpheusmarketplace.F("Image Recognition Model"),
+			Stake:   morpheusmarketplace.F("1000"),
+		})
 		if err == nil || res != nil {
 			t.Error("expected there to be a deadline error and for the response to be nil")
 		}

@@ -8,10 +8,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
-	"github.com/srt0422/morpheus-marketplace-go/internal/param"
-	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apijson"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/param"
+	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/stainless-sdks/morpheus-marketplace-go/shared"
 )
 
 // BlockchainProviderService contains methods and other services that help with
@@ -36,7 +37,7 @@ func NewBlockchainProviderService(opts ...option.RequestOption) (r *BlockchainPr
 }
 
 // Create a new provider
-func (r *BlockchainProviderService) New(ctx context.Context, body BlockchainProviderNewParams, opts ...option.RequestOption) (res *Provider, err error) {
+func (r *BlockchainProviderService) New(ctx context.Context, body BlockchainProviderNewParams, opts ...option.RequestOption) (res *shared.Provider, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/providers"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
@@ -44,7 +45,7 @@ func (r *BlockchainProviderService) New(ctx context.Context, body BlockchainProv
 }
 
 // List providers
-func (r *BlockchainProviderService) List(ctx context.Context, opts ...option.RequestOption) (res *[]Provider, err error) {
+func (r *BlockchainProviderService) List(ctx context.Context, opts ...option.RequestOption) (res *[]shared.Provider, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/providers"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
@@ -62,33 +63,6 @@ func (r *BlockchainProviderService) Delete(ctx context.Context, id string, opts 
 	path := fmt.Sprintf("blockchain/providers/%s", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return
-}
-
-type Provider struct {
-	// Unique identifier of the provider
-	ID string `json:"id,required"`
-	// Endpoint URL of the provider
-	Endpoint string `json:"endpoint,required"`
-	// Amount staked by the provider
-	Stake string       `json:"stake,required"`
-	JSON  providerJSON `json:"-"`
-}
-
-// providerJSON contains the JSON metadata for the struct [Provider]
-type providerJSON struct {
-	ID          apijson.Field
-	Endpoint    apijson.Field
-	Stake       apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *Provider) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r providerJSON) RawJSON() string {
-	return r.raw
 }
 
 type BlockchainProviderNewParams struct {
