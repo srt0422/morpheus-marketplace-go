@@ -23,6 +23,7 @@ func TestBlockchainAllowanceGet(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Allowance.Get(context.TODO(), morpheusmarketplace.BlockchainAllowanceGetParams{
 		Spender: morpheusmarketplace.F("spender"),

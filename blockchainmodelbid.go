@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 	"github.com/srt0422/morpheus-marketplace-go/internal/apiquery"
 	"github.com/srt0422/morpheus-marketplace-go/internal/param"
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
@@ -37,7 +36,7 @@ func NewBlockchainModelBidService(opts ...option.RequestOption) (r *BlockchainMo
 }
 
 // List bids for a model
-func (r *BlockchainModelBidService) List(ctx context.Context, id string, query BlockchainModelBidListParams, opts ...option.RequestOption) (res *BlockchainModelBidListResponse, err error) {
+func (r *BlockchainModelBidService) List(ctx context.Context, id string, query BlockchainModelBidListParams, opts ...option.RequestOption) (res *shared.BidList, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -49,7 +48,7 @@ func (r *BlockchainModelBidService) List(ctx context.Context, id string, query B
 }
 
 // List active bids for a model
-func (r *BlockchainModelBidService) Active(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainModelBidActiveResponse, err error) {
+func (r *BlockchainModelBidService) Active(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.BidList, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -61,7 +60,7 @@ func (r *BlockchainModelBidService) Active(ctx context.Context, id string, opts 
 }
 
 // List rated bids for a model
-func (r *BlockchainModelBidService) Rated(ctx context.Context, id string, opts ...option.RequestOption) (res *BlockchainModelBidRatedResponse, err error) {
+func (r *BlockchainModelBidService) Rated(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.BidList, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -70,72 +69,6 @@ func (r *BlockchainModelBidService) Rated(ctx context.Context, id string, opts .
 	path := fmt.Sprintf("blockchain/models/%s/bids/rated", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
-}
-
-type BlockchainModelBidListResponse struct {
-	// List of bids
-	Bids []shared.Bid                       `json:"bids,required"`
-	JSON blockchainModelBidListResponseJSON `json:"-"`
-}
-
-// blockchainModelBidListResponseJSON contains the JSON metadata for the struct
-// [BlockchainModelBidListResponse]
-type blockchainModelBidListResponseJSON struct {
-	Bids        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainModelBidListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainModelBidListResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainModelBidActiveResponse struct {
-	// List of bids
-	Bids []shared.Bid                         `json:"bids,required"`
-	JSON blockchainModelBidActiveResponseJSON `json:"-"`
-}
-
-// blockchainModelBidActiveResponseJSON contains the JSON metadata for the struct
-// [BlockchainModelBidActiveResponse]
-type blockchainModelBidActiveResponseJSON struct {
-	Bids        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainModelBidActiveResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainModelBidActiveResponseJSON) RawJSON() string {
-	return r.raw
-}
-
-type BlockchainModelBidRatedResponse struct {
-	// List of bids
-	Bids []shared.Bid                        `json:"bids,required"`
-	JSON blockchainModelBidRatedResponseJSON `json:"-"`
-}
-
-// blockchainModelBidRatedResponseJSON contains the JSON metadata for the struct
-// [BlockchainModelBidRatedResponse]
-type blockchainModelBidRatedResponseJSON struct {
-	Bids        apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *BlockchainModelBidRatedResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r blockchainModelBidRatedResponseJSON) RawJSON() string {
-	return r.raw
 }
 
 type BlockchainModelBidListParams struct {

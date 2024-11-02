@@ -23,6 +23,7 @@ func TestBlockchainModelBidListWithOptionalParams(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Models.Bids.List(
 		context.TODO(),
@@ -51,6 +52,7 @@ func TestBlockchainModelBidActive(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Models.Bids.Active(context.TODO(), "id")
 	if err != nil {
@@ -72,6 +74,7 @@ func TestBlockchainModelBidRated(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Models.Bids.Rated(context.TODO(), "id")
 	if err != nil {

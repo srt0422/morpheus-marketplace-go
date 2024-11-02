@@ -23,6 +23,7 @@ func TestBlockchainTokenSupplyGet(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Token.Supply.Get(context.TODO())
 	if err != nil {

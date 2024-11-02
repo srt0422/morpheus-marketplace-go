@@ -14,41 +14,45 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
-// BlockchainAllowanceService contains methods and other services that help with
+// BlockchainSessionUserService contains methods and other services that help with
 // interacting with the morpheus-marketplace API.
 //
 // Note, unlike clients, this service does not read variables from the environment
 // automatically. You should not instantiate this service directly, and instead use
-// the [NewBlockchainAllowanceService] method instead.
-type BlockchainAllowanceService struct {
+// the [NewBlockchainSessionUserService] method instead.
+type BlockchainSessionUserService struct {
 	Options []option.RequestOption
 }
 
-// NewBlockchainAllowanceService generates a new service that applies the given
+// NewBlockchainSessionUserService generates a new service that applies the given
 // options to each request. These options are applied after the parent client's
 // options (if there is one), and before any request-specific options.
-func NewBlockchainAllowanceService(opts ...option.RequestOption) (r *BlockchainAllowanceService) {
-	r = &BlockchainAllowanceService{}
+func NewBlockchainSessionUserService(opts ...option.RequestOption) (r *BlockchainSessionUserService) {
+	r = &BlockchainSessionUserService{}
 	r.Options = opts
 	return
 }
 
-// Retrieve allowance
-func (r *BlockchainAllowanceService) Get(ctx context.Context, query BlockchainAllowanceGetParams, opts ...option.RequestOption) (res *shared.Allowance, err error) {
+// List user sessions
+func (r *BlockchainSessionUserService) List(ctx context.Context, query BlockchainSessionUserListParams, opts ...option.RequestOption) (res *shared.SessionList, err error) {
 	opts = append(r.Options[:], opts...)
-	path := "blockchain/allowance"
+	path := "blockchain/sessions/user"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return
 }
 
-type BlockchainAllowanceGetParams struct {
-	// Spender Ethereum address
-	Spender param.Field[string] `query:"spender,required"`
+type BlockchainSessionUserListParams struct {
+	// User identifier
+	User param.Field[string] `query:"user,required"`
+	// Maximum number of results to return
+	Limit param.Field[int64] `query:"limit"`
+	// Number of results to skip
+	Offset param.Field[int64] `query:"offset"`
 }
 
-// URLQuery serializes [BlockchainAllowanceGetParams]'s query parameters as
+// URLQuery serializes [BlockchainSessionUserListParams]'s query parameters as
 // `url.Values`.
-func (r BlockchainAllowanceGetParams) URLQuery() (v url.Values) {
+func (r BlockchainSessionUserListParams) URLQuery() (v url.Values) {
 	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
 		ArrayFormat:  apiquery.ArrayQueryFormatComma,
 		NestedFormat: apiquery.NestedQueryFormatBrackets,

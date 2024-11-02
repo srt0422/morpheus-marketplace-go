@@ -23,6 +23,7 @@ func TestBlockchainLatestBlockGet(t *testing.T) {
 	}
 	client := morpheusmarketplace.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.LatestBlock.Get(context.TODO())
 	if err != nil {

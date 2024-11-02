@@ -8,6 +8,7 @@ import (
 
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
 	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 // BlockchainBalanceService contains methods and other services that help with
@@ -30,7 +31,7 @@ func NewBlockchainBalanceService(opts ...option.RequestOption) (r *BlockchainBal
 }
 
 // Retrieve balance
-func (r *BlockchainBalanceService) Get(ctx context.Context, opts ...option.RequestOption) (res *Balance, err error) {
+func (r *BlockchainBalanceService) Get(ctx context.Context, opts ...option.RequestOption) (res *shared.Balance, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/balance"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
