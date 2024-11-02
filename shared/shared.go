@@ -3,8 +3,8 @@
 package shared
 
 import (
-	"github.com/stainless-sdks/morpheus-marketplace-go"
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/apijson"
+	"github.com/srt0422/morpheus-marketplace-go"
+	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 )
 
 type Allowance struct {

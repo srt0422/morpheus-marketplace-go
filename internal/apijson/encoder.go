@@ -12,7 +12,7 @@ import (
 
 	"github.com/tidwall/sjson"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/param"
+	"github.com/srt0422/morpheus-marketplace-go/internal/param"
 )
 
 var encoders sync.Map // map[encoderEntry]encoderFunc

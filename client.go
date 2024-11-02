@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with

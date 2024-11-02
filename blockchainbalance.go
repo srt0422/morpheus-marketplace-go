@@ -6,9 +6,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal/requestconfig"
-	"github.com/stainless-sdks/morpheus-marketplace-go/option"
-	"github.com/stainless-sdks/morpheus-marketplace-go/shared"
+	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
+	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 // BlockchainBalanceService contains methods and other services that help with

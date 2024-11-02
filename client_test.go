@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go"
-	"github.com/stainless-sdks/morpheus-marketplace-go/internal"
-	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go"
+	"github.com/srt0422/morpheus-marketplace-go/internal"
+	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
 type closureTransport struct {

@@ -1,6 +1,6 @@
 # Morpheus Marketplace Go API Library
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks/morpheus-marketplace-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/morpheus-marketplace-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/srt0422/morpheus-marketplace-go"><img src="https://pkg.go.dev/badge/github.com/srt0422/morpheus-marketplace-go.svg" alt="Go Reference"></a>
 
 The Morpheus Marketplace Go library provides convenient access to [the Morpheus Marketplace REST
 API](https://docs.morpheus-marketplace.com) from applications written in Go. The full API of this library can be found in [api.md](api.md).
@@ -9,17 +9,25 @@ It is generated with [Stainless](https://www.stainlessapi.com/).
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks/morpheus-marketplace-go" // imported as morpheusmarketplace
+	"github.com/srt0422/morpheus-marketplace-go" // imported as morpheusmarketplace
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks/morpheus-marketplace-go@v0.0.1-alpha.0'
+go get -u 'github.com/srt0422/morpheus-marketplace-go@v0.0.1-alpha.0'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -36,8 +44,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks/morpheus-marketplace-go"
-	"github.com/stainless-sdks/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go"
+	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
 func main() {
@@ -151,7 +159,7 @@ client.Blockchain.Models.New(context.TODO(), ...,
 )
 ```
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/morpheus-marketplace-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/srt0422/morpheus-marketplace-go/option).
 
 ### Pagination
 
@@ -353,7 +361,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/morpheus-marketplace-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/srt0422/morpheus-marketplace-go/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 
