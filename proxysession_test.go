@@ -52,7 +52,7 @@ func TestProxySessionProviderClaim(t *testing.T) {
 	)
 	_, err := client.Proxy.Sessions.ProviderClaim(
 		context.TODO(),
-		"id",
+		"1234567890abcdef1234567890abcdef12345678",
 		morpheusmarketplace.ProxySessionProviderClaimParams{
 			Claim: morpheusmarketplace.F("claim_abc123"),
 		},

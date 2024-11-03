@@ -76,7 +76,7 @@ func TestBlockchainModelBidRated(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Models.Bids.Rated(context.TODO(), "id")
+	_, err := client.Blockchain.Models.Bids.Rated(context.TODO(), "1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

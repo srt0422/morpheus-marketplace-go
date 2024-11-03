@@ -51,7 +51,7 @@ func TestBlockchainSessionGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Sessions.Get(context.TODO(), "id")
+	_, err := client.Blockchain.Sessions.Get(context.TODO(), "1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
@@ -73,7 +73,7 @@ func TestBlockchainSessionClose(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Blockchain.Sessions.Close(context.TODO(), "id")
+	err := client.Blockchain.Sessions.Close(context.TODO(), "1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
