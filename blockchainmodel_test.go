@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
+	morpheusmarketplace "github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
@@ -28,7 +28,7 @@ func TestBlockchainModelNewWithOptionalParams(t *testing.T) {
 	_, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
 		Fee:     morpheusmarketplace.F("0.01"),
 		IpfsID:  morpheusmarketplace.F("QmX..."),
-		ModelID: morpheusmarketplace.F("mod-67890"),
+		ModelID: morpheusmarketplace.F("1234567890abcdef1234567890abcdef12345678"),
 		Name:    morpheusmarketplace.F("Image Recognition Model"),
 		Stake:   morpheusmarketplace.F("1000"),
 		Tags:    morpheusmarketplace.F([]string{"machine learning", "image recognition"}),
@@ -76,7 +76,7 @@ func TestBlockchainModelDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Blockchain.Models.Delete(context.TODO(), "id")
+	err := client.Blockchain.Models.Delete(context.TODO(), "1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
@@ -100,7 +100,7 @@ func TestBlockchainModelSession(t *testing.T) {
 	)
 	_, err := client.Blockchain.Models.Session(
 		context.TODO(),
-		"id",
+		"1234567890abcdef1234567890abcdef12345678",
 		morpheusmarketplace.BlockchainModelSessionParams{
 			SessionDuration: morpheusmarketplace.F("3600"),
 		},

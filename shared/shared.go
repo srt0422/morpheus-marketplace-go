@@ -3,7 +3,6 @@
 package shared
 
 import (
-	"github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 )
 
@@ -49,10 +48,37 @@ func (r balanceJSON) RawJSON() string {
 	return r.raw
 }
 
+type Bid struct {
+	// Unique identifier of the bid
+	ID string `json:"id,required"`
+	// ID of the model the bid is for
+	ModelID string `json:"modelID,required"`
+	// Bid price per second
+	PricePerSecond string  `json:"pricePerSecond,required"`
+	JSON           bidJSON `json:"-"`
+}
+
+func (r *Bid) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+// bidJSON contains the JSON metadata for the struct [Bid]
+type bidJSON struct {
+	ID             apijson.Field
+	ModelID        apijson.Field
+	PricePerSecond apijson.Field
+	raw            string
+	ExtraFields    map[string]apijson.Field
+}
+
+func (r bidJSON) RawJSON() string {
+	return r.raw
+}
+
 type BidList struct {
 	// List of bids
-	Bids []morpheusmarketplace.Bid `json:"bids,required"`
-	JSON bidListJSON               `json:"-"`
+	Bids []Bid       `json:"bids,required"`
+	JSON bidListJSON `json:"-"`
 }
 
 // bidListJSON contains the JSON metadata for the struct [BidList]

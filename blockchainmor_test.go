@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
+	morpheusmarketplace "github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
@@ -26,8 +26,8 @@ func TestBlockchainMorSend(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Mor.Send(context.TODO(), morpheusmarketplace.BlockchainMorSendParams{
-		Amount: morpheusmarketplace.F("250"),
-		To:     morpheusmarketplace.F("to"),
+		Amount: morpheusmarketplace.F("0x1234567890abcdef1234567890abcdef12345678"),
+		To:     morpheusmarketplace.F("0x1234567890abcdef1234567890abcdef12345679"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error

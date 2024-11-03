@@ -35,7 +35,7 @@ func NewBlockchainBidService(opts ...option.RequestOption) (r *BlockchainBidServ
 }
 
 // Create a new bid
-func (r *BlockchainBidService) New(ctx context.Context, body BlockchainBidNewParams, opts ...option.RequestOption) (res *Bid, err error) {
+func (r *BlockchainBidService) New(ctx context.Context, body BlockchainBidNewParams, opts ...option.RequestOption) (res *shared.Bid, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/bids"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
@@ -43,7 +43,7 @@ func (r *BlockchainBidService) New(ctx context.Context, body BlockchainBidNewPar
 }
 
 // Retrieve a bid
-func (r *BlockchainBidService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *Bid, err error) {
+func (r *BlockchainBidService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.Bid, err error) {
 	opts = append(r.Options[:], opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -77,33 +77,6 @@ func (r *BlockchainBidService) Session(ctx context.Context, id string, body Bloc
 	path := fmt.Sprintf("blockchain/bids/%s/session", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
-}
-
-type Bid struct {
-	// Unique identifier of the bid
-	ID string `json:"id,required"`
-	// ID of the model the bid is for
-	ModelID string `json:"modelID,required"`
-	// Bid price per second
-	PricePerSecond string  `json:"pricePerSecond,required"`
-	JSON           bidJSON `json:"-"`
-}
-
-// bidJSON contains the JSON metadata for the struct [Bid]
-type bidJSON struct {
-	ID             apijson.Field
-	ModelID        apijson.Field
-	PricePerSecond apijson.Field
-	raw            string
-	ExtraFields    map[string]apijson.Field
-}
-
-func (r *Bid) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r bidJSON) RawJSON() string {
-	return r.raw
 }
 
 type BlockchainBidNewParams struct {

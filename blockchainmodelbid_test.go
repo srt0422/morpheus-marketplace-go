@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
+	morpheusmarketplace "github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
@@ -27,7 +27,7 @@ func TestBlockchainModelBidListWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Blockchain.Models.Bids.List(
 		context.TODO(),
-		"id",
+		"1234567890abcdef1234567890abcdef12345678",
 		morpheusmarketplace.BlockchainModelBidListParams{
 			Limit:  morpheusmarketplace.F(int64(10)),
 			Offset: morpheusmarketplace.F(int64(0)),
@@ -54,7 +54,7 @@ func TestBlockchainModelBidActive(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Models.Bids.Active(context.TODO(), "id")
+	_, err := client.Blockchain.Models.Bids.Active(context.TODO(), "1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

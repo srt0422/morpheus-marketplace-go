@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
+	morpheusmarketplace "github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
@@ -26,7 +26,7 @@ func TestBlockchainAllowanceGet(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Allowance.Get(context.TODO(), morpheusmarketplace.BlockchainAllowanceGetParams{
-		Spender: morpheusmarketplace.F("spender"),
+		Spender: morpheusmarketplace.F("0x1234567890abcdef1234567890abcdef12345678"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error

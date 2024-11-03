@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/srt0422/morpheus-marketplace-go"
+	morpheusmarketplace "github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
@@ -27,7 +27,7 @@ func TestBlockchainApprove(t *testing.T) {
 	)
 	err := client.Blockchain.Approve(context.TODO(), morpheusmarketplace.BlockchainApproveParams{
 		Amount:  morpheusmarketplace.F("500"),
-		Spender: morpheusmarketplace.F("spender"),
+		Spender: morpheusmarketplace.F("0x1234567890abcdef1234567890abcdef12345678"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
