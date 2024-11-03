@@ -27,7 +27,7 @@ func TestBlockchainEthSend(t *testing.T) {
 	)
 	_, err := client.Blockchain.Eth.Send(context.TODO(), morpheusmarketplace.BlockchainEthSendParams{
 		Amount: morpheusmarketplace.F("1.5"),
-		To:     morpheusmarketplace.F("0x1234567890abcdef1234567890abcdef12345678"),
+		To:     morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error

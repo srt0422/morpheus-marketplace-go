@@ -27,7 +27,7 @@ func TestBlockchainMorSend(t *testing.T) {
 	)
 	_, err := client.Blockchain.Mor.Send(context.TODO(), morpheusmarketplace.BlockchainMorSendParams{
 		Amount: morpheusmarketplace.F("250"),
-		To:     morpheusmarketplace.F("to"),
+		To:     morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error

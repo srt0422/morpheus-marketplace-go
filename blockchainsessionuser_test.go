@@ -26,7 +26,7 @@ func TestBlockchainSessionUserListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Sessions.User.List(context.TODO(), morpheusmarketplace.BlockchainSessionUserListParams{
-		User:   morpheusmarketplace.F("user_abc123"),
+		User:   morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
 		Limit:  morpheusmarketplace.F(int64(10)),
 		Offset: morpheusmarketplace.F(int64(0)),
 	})

@@ -26,7 +26,7 @@ func TestBlockchainAllowanceGet(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Blockchain.Allowance.Get(context.TODO(), morpheusmarketplace.BlockchainAllowanceGetParams{
-		Spender: morpheusmarketplace.F("spender"),
+		Spender: morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
