@@ -27,7 +27,7 @@ func TestBlockchainApprove(t *testing.T) {
 	)
 	err := client.Blockchain.Approve(context.TODO(), morpheusmarketplace.BlockchainApproveParams{
 		Amount:  morpheusmarketplace.F("500"),
-		Spender: morpheusmarketplace.F("spender"),
+		Spender: morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error

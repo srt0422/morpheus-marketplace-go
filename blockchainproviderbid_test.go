@@ -27,7 +27,7 @@ func TestBlockchainProviderBidListWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Blockchain.Providers.Bids.List(
 		context.TODO(),
-		"0x1234567890abcdef1234567890abcdef12345678",
+		"4592d8f8d7b001e72cb26a73e4fa1806a51ac79d",
 		morpheusmarketplace.BlockchainProviderBidListParams{
 			Limit:  morpheusmarketplace.F(int64(10)),
 			Offset: morpheusmarketplace.F(int64(0)),
@@ -54,7 +54,7 @@ func TestBlockchainProviderBidActive(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Providers.Bids.Active(context.TODO(), "0x1234567890abcdef1234567890abcdef12345678")
+	_, err := client.Blockchain.Providers.Bids.Active(context.TODO(), "4592d8f8d7b001e72cb26a73e4fa1806a51ac79d")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
