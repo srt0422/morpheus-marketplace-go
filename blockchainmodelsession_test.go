@@ -13,7 +13,7 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
-func TestBlockchainSessionBudgetList(t *testing.T) {
+func TestBlockchainModelSessionNew(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,7 +25,13 @@ func TestBlockchainSessionBudgetList(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Sessions.Budget.List(context.TODO())
+	_, err := client.Blockchains.Models.Sessions.New(
+		context.TODO(),
+		"id",
+		morpheusmarketplace.BlockchainModelSessionNewParams{
+			SessionDuration: morpheusmarketplace.F("3600"),
+		},
+	)
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

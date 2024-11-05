@@ -13,7 +13,7 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
-func TestBlockchainEthSend(t *testing.T) {
+func TestBlockchainModelBidRatedList(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,10 +25,7 @@ func TestBlockchainEthSend(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Eth.Send(context.TODO(), morpheusmarketplace.BlockchainEthSendParams{
-		Amount: morpheusmarketplace.F("1.5"),
-		To:     morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
-	})
+	_, err := client.Blockchains.Models.Bids.Rated.List(context.TODO(), "id")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
