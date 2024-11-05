@@ -25,7 +25,7 @@ func TestBlockchainModelStatGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Models.Stats.Get(context.TODO(), "id")
+	_, err := client.Blockchains.Models.Stats.Get(context.TODO(), "id")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {

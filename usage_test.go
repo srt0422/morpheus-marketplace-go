@@ -24,15 +24,9 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	model, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("0.01"),
-		IpfsID:  morpheusmarketplace.F("QmX..."),
-		ModelID: morpheusmarketplace.F("mod-67890"),
-		Name:    morpheusmarketplace.F("Image Recognition Model"),
-		Stake:   morpheusmarketplace.F("1000"),
-	})
+	balance, err := client.Blockchain.Balance.Get(context.TODO())
 	if err != nil {
 		t.Error(err)
 	}
-	t.Logf("%+v\n", model.ID)
+	t.Logf("%+v\n", balance.Balance)
 }

@@ -25,7 +25,7 @@ func TestBlockchainBidNew(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Bids.New(context.TODO(), morpheusmarketplace.BlockchainBidNewParams{
+	_, err := client.BlockchainBids.New(context.TODO(), morpheusmarketplace.BlockchainBidNewParams{
 		ModelID:        morpheusmarketplace.F("model_12345"),
 		PricePerSecond: morpheusmarketplace.F("0.005"),
 	})
@@ -50,7 +50,7 @@ func TestBlockchainBidGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Bids.Get(context.TODO(), "id")
+	_, err := client.BlockchainBids.Get(context.TODO(), "id")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
@@ -72,7 +72,7 @@ func TestBlockchainBidDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Blockchain.Bids.Delete(context.TODO(), "id")
+	err := client.BlockchainBids.Delete(context.TODO(), "id")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
@@ -94,7 +94,7 @@ func TestBlockchainBidSession(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Bids.Session(
+	_, err := client.BlockchainBids.Session(
 		context.TODO(),
 		"id",
 		morpheusmarketplace.BlockchainBidSessionParams{
