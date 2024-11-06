@@ -24,8 +24,6 @@ import (
 // the [NewBlockchainModelBidService] method instead.
 type BlockchainModelBidService struct {
 	Options []option.RequestOption
-	Active  *BlockchainModelBidActiveService
-	Rated   *BlockchainModelBidRatedService
 }
 
 // NewBlockchainModelBidService generates a new service that applies the given
@@ -34,8 +32,6 @@ type BlockchainModelBidService struct {
 func NewBlockchainModelBidService(opts ...option.RequestOption) (r *BlockchainModelBidService) {
 	r = &BlockchainModelBidService{}
 	r.Options = opts
-	r.Active = NewBlockchainModelBidActiveService(opts...)
-	r.Rated = NewBlockchainModelBidRatedService(opts...)
 	return
 }
 
@@ -48,6 +44,30 @@ func (r *BlockchainModelBidService) List(ctx context.Context, id string, query B
 	}
 	path := fmt.Sprintf("blockchain/models/%s/bids", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return
+}
+
+// List active bids for a model
+func (r *BlockchainModelBidService) Active(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.BidList, err error) {
+	opts = append(r.Options[:], opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("blockchain/models/%s/bids/active", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return
+}
+
+// List rated bids for a model
+func (r *BlockchainModelBidService) Rated(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.BidList, err error) {
+	opts = append(r.Options[:], opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("blockchain/models/%s/bids/rated", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 

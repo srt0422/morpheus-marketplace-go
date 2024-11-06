@@ -6,9 +6,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
 	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 // BlockchainTokenSupplyService contains methods and other services that help with
@@ -31,30 +31,9 @@ func NewBlockchainTokenSupplyService(opts ...option.RequestOption) (r *Blockchai
 }
 
 // Get token supply
-func (r *BlockchainTokenSupplyService) Get(ctx context.Context, opts ...option.RequestOption) (res *TokenSupply, err error) {
+func (r *BlockchainTokenSupplyService) Get(ctx context.Context, opts ...option.RequestOption) (res *shared.TokenSupply, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/token/supply"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
-}
-
-type TokenSupply struct {
-	// Total supply of the token
-	Supply string          `json:"supply,required"`
-	JSON   tokenSupplyJSON `json:"-"`
-}
-
-// tokenSupplyJSON contains the JSON metadata for the struct [TokenSupply]
-type tokenSupplyJSON struct {
-	Supply      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *TokenSupply) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r tokenSupplyJSON) RawJSON() string {
-	return r.raw
 }

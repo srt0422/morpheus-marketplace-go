@@ -72,7 +72,7 @@ func TestBlockchainProviderDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Blockchain.Providers.Delete(context.TODO(), "4592d8f8d7b001e72cb26a73e4fa1806a51ac79d")
+	err := client.Blockchain.Providers.Delete(context.TODO(), "0x1234567890abcdef1234567890abcdef12345678")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
