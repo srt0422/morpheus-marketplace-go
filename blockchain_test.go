@@ -8,12 +8,12 @@ import (
 	"os"
 	"testing"
 
-	morpheusmarketplace "github.com/srt0422/morpheus-marketplace-go"
+	"github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
 
-func TestBlockchainApprove(t *testing.T) {
+func TestBlockchainSendEth(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,9 +25,34 @@ func TestBlockchainApprove(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Blockchain.Approve(context.TODO(), morpheusmarketplace.BlockchainApproveParams{
-		Amount:  morpheusmarketplace.F("500"),
-		Spender: morpheusmarketplace.F("0x1234567890abcdef1234567890abcdef12345678"),
+	_, err := client.Blockchains.SendEth(context.TODO(), morpheusmarketplace.BlockchainSendEthParams{
+		Amount: morpheusmarketplace.F("1.5"),
+		To:     morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
+	})
+	if err != nil {
+		var apierr *morpheusmarketplace.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestBlockchainSendMor(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := morpheusmarketplace.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Blockchains.SendMor(context.TODO(), morpheusmarketplace.BlockchainSendMorParams{
+		Amount: morpheusmarketplace.F("250"),
+		To:     morpheusmarketplace.F("4592d8f8d7b001e72cb26a73e4fa1806a51ac79d"),
 	})
 	if err != nil {
 		var apierr *morpheusmarketplace.Error

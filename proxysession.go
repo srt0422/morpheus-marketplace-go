@@ -22,8 +22,7 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewProxySessionService] method instead.
 type ProxySessionService struct {
-	Options                  []option.RequestOption
-	ProviderClaimableBalance *ProxySessionProviderClaimableBalanceService
+	Options []option.RequestOption
 }
 
 // NewProxySessionService generates a new service that applies the given options to
@@ -32,7 +31,6 @@ type ProxySessionService struct {
 func NewProxySessionService(opts ...option.RequestOption) (r *ProxySessionService) {
 	r = &ProxySessionService{}
 	r.Options = opts
-	r.ProviderClaimableBalance = NewProxySessionProviderClaimableBalanceService(opts...)
 	return
 }
 
@@ -54,6 +52,40 @@ func (r *ProxySessionService) ProviderClaim(ctx context.Context, id string, body
 	path := fmt.Sprintf("proxy/sessions/%s/providerClaim", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
+}
+
+// Get provider claimable balance
+func (r *ProxySessionService) ProviderClaimableBalance(ctx context.Context, id string, opts ...option.RequestOption) (res *ClaimableBalance, err error) {
+	opts = append(r.Options[:], opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("proxy/sessions/%s/providerClaimableBalance", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return
+}
+
+type ClaimableBalance struct {
+	// Amount claimable by the provider
+	Balance string               `json:"balance,required"`
+	JSON    claimableBalanceJSON `json:"-"`
+}
+
+// claimableBalanceJSON contains the JSON metadata for the struct
+// [ClaimableBalance]
+type claimableBalanceJSON struct {
+	Balance     apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *ClaimableBalance) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r claimableBalanceJSON) RawJSON() string {
+	return r.raw
 }
 
 type ProxySessionInitiateParams struct {

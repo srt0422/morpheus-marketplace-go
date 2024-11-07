@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	morpheusmarketplace "github.com/srt0422/morpheus-marketplace-go"
+	"github.com/srt0422/morpheus-marketplace-go"
 	"github.com/srt0422/morpheus-marketplace-go/internal/testutil"
 	"github.com/srt0422/morpheus-marketplace-go/option"
 )
@@ -25,7 +25,7 @@ func TestBlockchainModelStatGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Blockchain.Models.Stats.Get(context.TODO(), "1234567890abcdef1234567890abcdef12345678")
+	_, err := client.Blockchains.Models.Stats.Get(context.TODO(), "id")
 	if err != nil {
 		var apierr *morpheusmarketplace.Error
 		if errors.As(err, &apierr) {
