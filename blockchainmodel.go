@@ -12,6 +12,7 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/internal/param"
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
 	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 // BlockchainModelService contains methods and other services that help with
@@ -21,10 +22,9 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewBlockchainModelService] method instead.
 type BlockchainModelService struct {
-	Options  []option.RequestOption
-	Sessions *BlockchainModelSessionService
-	Bids     *BlockchainModelBidService
-	Stats    *BlockchainModelStatService
+	Options []option.RequestOption
+	Bids    *BlockchainModelBidService
+	Stats   *BlockchainModelStatService
 }
 
 // NewBlockchainModelService generates a new service that applies the given options
@@ -33,7 +33,6 @@ type BlockchainModelService struct {
 func NewBlockchainModelService(opts ...option.RequestOption) (r *BlockchainModelService) {
 	r = &BlockchainModelService{}
 	r.Options = opts
-	r.Sessions = NewBlockchainModelSessionService(opts...)
 	r.Bids = NewBlockchainModelBidService(opts...)
 	r.Stats = NewBlockchainModelStatService(opts...)
 	return
@@ -65,6 +64,18 @@ func (r *BlockchainModelService) Delete(ctx context.Context, id string, opts ...
 	}
 	path := fmt.Sprintf("blockchain/models/%s", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
+	return
+}
+
+// Start a session for a model
+func (r *BlockchainModelService) Session(ctx context.Context, id string, body BlockchainModelSessionParams, opts ...option.RequestOption) (res *shared.Session, err error) {
+	opts = append(r.Options[:], opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("blockchain/models/%s/session", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
@@ -107,6 +118,30 @@ func (r modelJSON) RawJSON() string {
 	return r.raw
 }
 
+type Stats struct {
+	// ID of the model
+	ModelID string `json:"modelID,required"`
+	// Statistics related to the model
+	Stats map[string]interface{} `json:"stats,required"`
+	JSON  statsJSON              `json:"-"`
+}
+
+// statsJSON contains the JSON metadata for the struct [Stats]
+type statsJSON struct {
+	ModelID     apijson.Field
+	Stats       apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Stats) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r statsJSON) RawJSON() string {
+	return r.raw
+}
+
 type BlockchainModelNewParams struct {
 	// Fee for using the model
 	Fee param.Field[string] `json:"fee,required"`
@@ -123,5 +158,14 @@ type BlockchainModelNewParams struct {
 }
 
 func (r BlockchainModelNewParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type BlockchainModelSessionParams struct {
+	// Duration of the session
+	SessionDuration param.Field[string] `json:"sessionDuration,required"`
+}
+
+func (r BlockchainModelSessionParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }

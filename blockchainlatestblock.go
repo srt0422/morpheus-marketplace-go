@@ -6,9 +6,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
 	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 // BlockchainLatestBlockService contains methods and other services that help with
@@ -31,30 +31,9 @@ func NewBlockchainLatestBlockService(opts ...option.RequestOption) (r *Blockchai
 }
 
 // Get latest block number
-func (r *BlockchainLatestBlockService) Get(ctx context.Context, opts ...option.RequestOption) (res *LatestBlock, err error) {
+func (r *BlockchainLatestBlockService) Get(ctx context.Context, opts ...option.RequestOption) (res *shared.LatestBlock, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/latestBlock"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
-}
-
-type LatestBlock struct {
-	// Latest block number on the blockchain
-	BlockNumber string          `json:"blockNumber,required"`
-	JSON        latestBlockJSON `json:"-"`
-}
-
-// latestBlockJSON contains the JSON metadata for the struct [LatestBlock]
-type latestBlockJSON struct {
-	BlockNumber apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *LatestBlock) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r latestBlockJSON) RawJSON() string {
-	return r.raw
 }

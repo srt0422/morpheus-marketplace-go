@@ -24,7 +24,6 @@ import (
 // the [NewBlockchainProviderBidService] method instead.
 type BlockchainProviderBidService struct {
 	Options []option.RequestOption
-	Active  *BlockchainProviderBidActiveService
 }
 
 // NewBlockchainProviderBidService generates a new service that applies the given
@@ -33,7 +32,6 @@ type BlockchainProviderBidService struct {
 func NewBlockchainProviderBidService(opts ...option.RequestOption) (r *BlockchainProviderBidService) {
 	r = &BlockchainProviderBidService{}
 	r.Options = opts
-	r.Active = NewBlockchainProviderBidActiveService(opts...)
 	return
 }
 
@@ -46,6 +44,18 @@ func (r *BlockchainProviderBidService) List(ctx context.Context, id string, quer
 	}
 	path := fmt.Sprintf("blockchain/providers/%s/bids", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return
+}
+
+// List active bids for a provider
+func (r *BlockchainProviderBidService) Active(ctx context.Context, id string, opts ...option.RequestOption) (res *shared.BidList, err error) {
+	opts = append(r.Options[:], opts...)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("blockchain/providers/%s/bids/active", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
 	return
 }
 
