@@ -10,6 +10,7 @@ import (
 	"github.com/srt0422/morpheus-marketplace-go/internal/param"
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
 	"github.com/srt0422/morpheus-marketplace-go/option"
+	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 // BlockchainService contains methods and other services that help with interacting
@@ -19,18 +20,8 @@ import (
 // automatically. You should not instantiate this service directly, and instead use
 // the [NewBlockchainService] method instead.
 type BlockchainService struct {
-	Options      []option.RequestOption
-	Eth          *BlockchainEthService
-	Mor          *BlockchainMorService
-	Models       *BlockchainModelService
-	Bids         *BlockchainBidService
-	Sessions     *BlockchainSessionService
-	Providers    *BlockchainProviderService
-	Balance      *BlockchainBalanceService
-	Allowance    *BlockchainAllowanceService
-	LatestBlock  *BlockchainLatestBlockService
-	Token        *BlockchainTokenService
-	Transactions *BlockchainTransactionService
+	Options []option.RequestOption
+	Models  *BlockchainModelService
 }
 
 // NewBlockchainService generates a new service that applies the given options to
@@ -39,36 +30,44 @@ type BlockchainService struct {
 func NewBlockchainService(opts ...option.RequestOption) (r *BlockchainService) {
 	r = &BlockchainService{}
 	r.Options = opts
-	r.Eth = NewBlockchainEthService(opts...)
-	r.Mor = NewBlockchainMorService(opts...)
 	r.Models = NewBlockchainModelService(opts...)
-	r.Bids = NewBlockchainBidService(opts...)
-	r.Sessions = NewBlockchainSessionService(opts...)
-	r.Providers = NewBlockchainProviderService(opts...)
-	r.Balance = NewBlockchainBalanceService(opts...)
-	r.Allowance = NewBlockchainAllowanceService(opts...)
-	r.LatestBlock = NewBlockchainLatestBlockService(opts...)
-	r.Token = NewBlockchainTokenService(opts...)
-	r.Transactions = NewBlockchainTransactionService(opts...)
 	return
 }
 
-// Approve allowance
-func (r *BlockchainService) Approve(ctx context.Context, body BlockchainApproveParams, opts ...option.RequestOption) (err error) {
+// Send ETH to a specified address
+func (r *BlockchainService) SendEth(ctx context.Context, body BlockchainSendEthParams, opts ...option.RequestOption) (res *shared.Balance, err error) {
 	opts = append(r.Options[:], opts...)
-	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
-	path := "blockchain/approve"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, nil, opts...)
+	path := "blockchain/send/eth"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
-type BlockchainApproveParams struct {
-	// Amount to approve
-	Amount param.Field[string] `json:"amount,required"`
-	// Spender Ethereum address
-	Spender param.Field[string] `json:"spender,required"`
+// Send MOR to a specified address
+func (r *BlockchainService) SendMor(ctx context.Context, body BlockchainSendMorParams, opts ...option.RequestOption) (res *shared.Balance, err error) {
+	opts = append(r.Options[:], opts...)
+	path := "blockchain/send/mor"
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
 }
 
-func (r BlockchainApproveParams) MarshalJSON() (data []byte, err error) {
+type BlockchainSendEthParams struct {
+	// Amount of ETH to send
+	Amount param.Field[string] `json:"amount,required"`
+	// Ethereum address to send ETH to
+	To param.Field[string] `json:"to,required"`
+}
+
+func (r BlockchainSendEthParams) MarshalJSON() (data []byte, err error) {
+	return apijson.MarshalRoot(r)
+}
+
+type BlockchainSendMorParams struct {
+	// Amount of MOR to send
+	Amount param.Field[string] `json:"amount,required"`
+	// Ethereum address to send MOR to
+	To param.Field[string] `json:"to,required"`
+}
+
+func (r BlockchainSendMorParams) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
 }

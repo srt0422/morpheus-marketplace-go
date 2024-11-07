@@ -15,9 +15,12 @@ import (
 // interacting with the morpheus-marketplace API. You should not instantiate this
 // client directly, and instead use the [NewClient] method instead.
 type Client struct {
-	Options    []option.RequestOption
-	Blockchain *BlockchainService
-	Proxy      *ProxyService
+	Options            []option.RequestOption
+	Blockchains        *BlockchainService
+	BlockchainBids     *BlockchainBidService
+	BlockchainSessions *BlockchainSessionService
+	Blockchain         *BlockchainService
+	Proxy              *ProxyService
 }
 
 // NewClient generates a new client with the default option read from the
@@ -33,6 +36,9 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 
 	r = &Client{Options: opts}
 
+	r.Blockchains = NewBlockchainService(opts...)
+	r.BlockchainBids = NewBlockchainBidService(opts...)
+	r.BlockchainSessions = NewBlockchainSessionService(opts...)
 	r.Blockchain = NewBlockchainService(opts...)
 	r.Proxy = NewProxyService(opts...)
 
