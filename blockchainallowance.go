@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/srt0422/morpheus-marketplace-go/internal/apijson"
 	"github.com/srt0422/morpheus-marketplace-go/internal/apiquery"
 	"github.com/srt0422/morpheus-marketplace-go/internal/param"
 	"github.com/srt0422/morpheus-marketplace-go/internal/requestconfig"
 	"github.com/srt0422/morpheus-marketplace-go/option"
-	"github.com/srt0422/morpheus-marketplace-go/shared"
 )
 
 // BlockchainAllowanceService contains methods and other services that help with
@@ -34,11 +34,32 @@ func NewBlockchainAllowanceService(opts ...option.RequestOption) (r *BlockchainA
 }
 
 // Retrieve allowance
-func (r *BlockchainAllowanceService) Get(ctx context.Context, query BlockchainAllowanceGetParams, opts ...option.RequestOption) (res *shared.Allowance, err error) {
+func (r *BlockchainAllowanceService) Get(ctx context.Context, query BlockchainAllowanceGetParams, opts ...option.RequestOption) (res *Allowance, err error) {
 	opts = append(r.Options[:], opts...)
 	path := "blockchain/allowance"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return
+}
+
+type Allowance struct {
+	// Current allowance amount
+	Allowance string        `json:"allowance,required"`
+	JSON      allowanceJSON `json:"-"`
+}
+
+// allowanceJSON contains the JSON metadata for the struct [Allowance]
+type allowanceJSON struct {
+	Allowance   apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *Allowance) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r allowanceJSON) RawJSON() string {
+	return r.raw
 }
 
 type BlockchainAllowanceGetParams struct {

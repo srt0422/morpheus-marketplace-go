@@ -24,7 +24,7 @@ Or to pin the version:
 <!-- x-release-please-start-version -->
 
 ```sh
-go get -u 'github.com/srt0422/morpheus-marketplace-go@v0.0.1-alpha.0'
+go get -u 'github.com/srt0422/morpheus-marketplace-go@v0.1.0-alpha.1'
 ```
 
 <!-- x-release-please-end -->
@@ -52,17 +52,11 @@ func main() {
 	client := morpheusmarketplace.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("X_API_KEY")
 	)
-	model, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("0.01"),
-		IpfsID:  morpheusmarketplace.F("QmX..."),
-		ModelID: morpheusmarketplace.F("mod-67890"),
-		Name:    morpheusmarketplace.F("Image Recognition Model"),
-		Stake:   morpheusmarketplace.F("1000"),
-	})
+	balance, err := client.Blockchain.Balance.Get(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", model.ID)
+	fmt.Printf("%+v\n", balance.Balance)
 }
 
 ```
@@ -151,7 +145,7 @@ client := morpheusmarketplace.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Blockchain.Models.New(context.TODO(), ...,
+client.Blockchain.Balance.Get(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -180,20 +174,14 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Blockchain.Models.New(context.TODO(), morpheusmarketplace.BlockchainModelNewParams{
-	Fee:     morpheusmarketplace.F("0.01"),
-	IpfsID:  morpheusmarketplace.F("QmX..."),
-	ModelID: morpheusmarketplace.F("mod-67890"),
-	Name:    morpheusmarketplace.F("Image Recognition Model"),
-	Stake:   morpheusmarketplace.F("1000"),
-})
+_, err := client.Blockchain.Balance.Get(context.TODO())
 if err != nil {
 	var apierr *morpheusmarketplace.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
 	}
-	panic(err.Error()) // GET "/blockchain/models": 400 Bad Request { ... }
+	panic(err.Error()) // GET "/blockchain/balance": 400 Bad Request { ... }
 }
 ```
 
@@ -211,15 +199,8 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Blockchain.Models.New(
+client.Blockchain.Balance.Get(
 	ctx,
-	morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("0.01"),
-		IpfsID:  morpheusmarketplace.F("QmX..."),
-		ModelID: morpheusmarketplace.F("mod-67890"),
-		Name:    morpheusmarketplace.F("Image Recognition Model"),
-		Stake:   morpheusmarketplace.F("1000"),
-	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -253,17 +234,7 @@ client := morpheusmarketplace.NewClient(
 )
 
 // Override per-request:
-client.Blockchain.Models.New(
-	context.TODO(),
-	morpheusmarketplace.BlockchainModelNewParams{
-		Fee:     morpheusmarketplace.F("0.01"),
-		IpfsID:  morpheusmarketplace.F("QmX..."),
-		ModelID: morpheusmarketplace.F("mod-67890"),
-		Name:    morpheusmarketplace.F("Image Recognition Model"),
-		Stake:   morpheusmarketplace.F("1000"),
-	},
-	option.WithMaxRetries(5),
-)
+client.Blockchain.Balance.Get(context.TODO(), option.WithMaxRetries(5))
 ```
 
 ### Making custom/undocumented requests
